@@ -43,6 +43,7 @@ class UserController extends Controller
     {
         try{
             $validation = $request->validate([
+                'name' => 'required',
                 'email' => 'required|email',
                 'password' => 'required']);
         }
@@ -50,7 +51,10 @@ class UserController extends Controller
             return response()->json("error", Response::HTTP_BAD_REQUEST);
         }
 
-        User::firstOrCreate([ "name" => $request->get('name'), "email" => $request->get('email'), "password" => Hash::make( $request->get('password'))]);
+        User::firstOrCreate([
+            "name" => $request->get('name'),
+            "email" => $request->get('email'),
+            "password" => Hash::make( $request->get('password'))]);
         return response()->json([
             'status_code' => 200,
             'message' => 'User created successfully'
