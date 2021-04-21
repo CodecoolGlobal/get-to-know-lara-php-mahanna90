@@ -12,7 +12,7 @@ function Login() {
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
-        axios.post('/api/login', {
+        axios.post('http://localhost:3000/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api/login', {
                 headers: {
                     "Content-Type": "application/json",
                     "Accepted": "application/json",
