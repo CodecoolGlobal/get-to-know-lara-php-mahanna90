@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-    function index(Request $request)
+    function login(Request $request)
     {
         try{
             $validation = $request->validate([

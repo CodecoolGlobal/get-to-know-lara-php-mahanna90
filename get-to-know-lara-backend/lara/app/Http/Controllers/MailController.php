@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Mail;
 use Illuminate\Http\Request;
 
 class MailController extends Controller
@@ -13,7 +14,8 @@ class MailController extends Controller
      */
     public function index()
     {
-        //
+        // get all emails
+        return Mail::all();
     }
 
     /**
@@ -25,6 +27,7 @@ class MailController extends Controller
     public function store(Request $request)
     {
         //
+        return Mail::create($request->all());
     }
 
     /**
@@ -36,6 +39,7 @@ class MailController extends Controller
     public function show($id)
     {
         //
+        return Mail::find($id);
     }
 
     /**
@@ -48,6 +52,10 @@ class MailController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $mail = Mail::find($id);
+        $mail->update($request->all());
+        return $mail;
     }
 
     /**
@@ -59,5 +67,6 @@ class MailController extends Controller
     public function destroy($id)
     {
         //
+        return Mail::destroy($id);
     }
 }
