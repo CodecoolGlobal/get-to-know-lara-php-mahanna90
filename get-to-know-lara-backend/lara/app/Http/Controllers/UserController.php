@@ -66,6 +66,20 @@ class UserController extends Controller
         return response($response, Response::HTTP_CREATED);
     }
 
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+
+        $response = [
+            'message' => 'User logged out'
+        ];
+
+        return response($response, Response::HTTP_ACCEPTED);
+    }
+
+
+
+
     /**
      * Display the specified resource.
      *

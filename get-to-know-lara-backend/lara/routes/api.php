@@ -37,6 +37,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/mails', [MailController::class, 'index']);
     Route::put('/mails', [MailController::class, 'update']);
+    Route::post('/logout', [UserController::class, 'logout']);
 });
 
 //Route::resource('mails', 'MailController');
