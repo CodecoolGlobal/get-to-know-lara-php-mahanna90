@@ -16,10 +16,10 @@ class CreateMailsTable extends Migration
         Schema::create('mails', function (Blueprint $table) {
             $table->id();
 
-//            $table->integer('id_user_from')->unsigned()->nullable();
+            $table->unsignedBigInteger('id_user_from')->nullable();
             $table->foreign('id_user_from')->references('id')->on('users');
 
-//            $table->integer('id_user_to')->unsigned()->nullable();
+            $table->unsignedBigInteger('id_user_to')->nullable();
             $table->foreign('id_user_to')->references('id')->on('users');
 
             $table->string('subject');
