@@ -1,8 +1,10 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
+use App\Models\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,13 +17,22 @@ use App\Models\User;
 |
 */
 
-Route::get('/user', function () {
-    $user = User::create([
-        "name" => "Sherlock Holmes",
-        "email" => "sherlock@holmes.com",
-        "password" => "password",
+Route::get('/user-test', function () {
+//    $user = User::create([
+//        "name" => "Sherlock Holmes",
+//        "email" => "sherlock@holmes.com",
+//        "password" => "password",
+//    ]);
+
+    $mail = Mail::create([
+        "id_user_from" => 3,
+        "subject" => "Welcome subject",
+        "message" => "THis is the message text.",
+        "is_read" => false,
+        "sent" => NOW(),
     ]);
-    return $user;
+
+    dd($mail);
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

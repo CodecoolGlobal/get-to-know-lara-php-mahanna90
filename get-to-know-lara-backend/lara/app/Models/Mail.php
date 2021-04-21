@@ -5,6 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
+/**
+ * Class Mail
+ * @mixin \Illuminate\Database\Eloquent\Builder
+ * @package App\Models
+ */
 class Mail extends Model
 {
     use HasFactory;
@@ -16,5 +22,9 @@ class Mail extends Model
         'message',
         'is_read',
         'sent',
+    ];
+
+    protected $casts = [
+        'sent' => 'datetime',
     ];
 }
