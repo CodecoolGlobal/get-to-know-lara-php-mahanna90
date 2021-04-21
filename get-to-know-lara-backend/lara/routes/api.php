@@ -45,8 +45,12 @@ Route::delete('/mails', [MailController::class, 'destroy']);
 Route::post('/registration', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
+Route::group(['middleware' => 'auth:sanctum'], function () {
+
+});
+
 //Route::resource('mails', 'MailController');
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});

@@ -12,7 +12,7 @@ class UserController extends Controller
     function login(Request $request)
     {
         try{
-            $validation = $request->validate([
+            $request->validate([
                 'email' => 'required|email',
                 'password' => 'required']);
         }
@@ -34,8 +34,6 @@ class UserController extends Controller
             'token' => $token
         ];
 
-//        return response()->json($error, Response::HTTP_BAD_REQUEST);
-
         return response($response, Response::HTTP_CREATED);
     }
 
@@ -55,10 +53,17 @@ class UserController extends Controller
             "name" => $request->get('name'),
             "email" => $request->get('email'),
             "password" => Hash::make( $request->get('password'))]);
-        return response()->json([
-            'status_code' => 200,
+
+//        return response()->json([
+//            'status_code' => 200,
+//            'message' => 'User created successfully'
+//        ]);
+
+        $response = [
             'message' => 'User created successfully'
-        ]);
+        ];
+
+        return response($response, Response::HTTP_CREATED);
     }
 
     /**
