@@ -19,23 +19,12 @@ use App\Http\Controllers\MailController;
 |
 */
 
-//Route::get('/user-test', function () {
-//    $user = User::create([
-//        "name" => "Sherlock Holmes",
-//        "email" => "sherlock@holmes.com",
-//        "password" => "password",
-//    ]);
-//
-//    $mail = Mail::create([
-//        "id_user_from" => 3,
-//        "subject" => "Welcome subject",
-//        "message" => "THis is the message text.",
-//        "is_read" => false,
-//        "sent" => NOW(),
-//    ]);
-//
-//    dd($mail);
-//});
+Route::get('/user-test', function () {
+    $users = User::all();
+
+    dd($users);
+//    return response($users, 200);
+});
 
 //Route::get('/mails', [MailController::class, 'index']);
 Route::post('/mails', [MailController::class, 'store']);
