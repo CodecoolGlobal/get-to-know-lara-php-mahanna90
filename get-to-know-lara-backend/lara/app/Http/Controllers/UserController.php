@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -66,9 +66,22 @@ class UserController extends Controller
         return response($response, Response::HTTP_CREATED);
     }
 
+    // does not work, cannot find token
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+
+        $userTokens = $request->user()->tokens;
+
+        foreach($userTokens as $token) {
+            $token->revoke();
+        }
+
+//        auth()->user()->tokens()->delete();
+//        $request->user()->currentAccessToken()->delete();
+
+//        auth()->user()->tokens->each(function($token, $key) {
+//            $token->delete();
+//        });
 
         $response = [
             'message' => 'User logged out'
