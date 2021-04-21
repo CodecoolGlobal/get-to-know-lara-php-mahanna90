@@ -26,5 +26,6 @@ class Mail extends Model
 
     protected $casts = [
         'sent' => 'datetime',
+        'is_read' => 'boolean',
     ];
 }

@@ -49,13 +49,15 @@ class MailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //
-
-        $mail = Mail::find($id);
-        $mail->update($request->all());
-        return $mail;
+        Mail::where('id', $request->get('id'))->update([
+            'is_read' => $request->get('is_read')
+        ]);
+//        $mail = Mail::find($request->get('id'));
+//        $mail->update($request->get('is_read'));
+        return Mail::find($request->get('id'));
     }
 
     /**
