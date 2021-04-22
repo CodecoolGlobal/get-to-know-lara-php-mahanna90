@@ -106,7 +106,7 @@ function Login() {
                     <AlertTitle>Warning</AlertTitle>
                     <strong>Please sign in to check your mails!</strong>
                 </Alert>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} >
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -149,7 +149,7 @@ function Login() {
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
+                            <Link href={"/register"} variant="body2">
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>

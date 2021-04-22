@@ -24,6 +24,7 @@ import {Route, Redirect, Switch} from 'react-router-dom';
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import {UserContext} from '../contexts/UserContext';
+import Link from "@material-ui/core/Link";
 
 const drawerWidth = 240;
 
@@ -95,6 +96,9 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(3),
         marginTop: '50px',
     },
+    link: {
+        textDecoration: "none",
+    }
 }));
 
 function Home() {
@@ -143,9 +147,10 @@ function Home() {
                             </>
                             :
                             <>
-                                <Button color="inherit">Login</Button>
-                                <Button color="inherit">Register</Button>
+                                <Button component={Link} href={"/login"} color="inherit">Login</Button>
+                                <Button component={Link} href={"/register"} color="inherit">Register</Button>
                             </>
+
                         }
                     </Toolbar>
                 </Toolbar>
