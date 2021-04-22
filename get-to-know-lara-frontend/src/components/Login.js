@@ -17,6 +17,7 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
+import {BASE_URL} from "../Constants";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -56,7 +57,7 @@ function Login() {
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
-        axios.post('http://localhost:3000/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api/login', {
+        axios.post(`${BASE_URL}/login`, {
             headers: {
                 "Content-Type": "application/json",
                 "Accepted": "application/json",

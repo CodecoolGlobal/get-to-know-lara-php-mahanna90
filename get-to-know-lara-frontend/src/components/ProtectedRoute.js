@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Route, Redirect } from "react-router-dom";
 import axios from "axios";
+import {BASE_URL} from "../Constants";
 
 const ProtectedRoute = ({ component: Component, loggedIn, roles, ...rest }) => {
     const [tokenInfo, setTokenInfo] = useState({});
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        setLoading(true);
-        axios.get(`${basisUrl}/validate-jwt-token`).then((res) => {
-            setTokenInfo(res.data);
-            setLoading(false);
-        });
-    }, [loggedIn]);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     axios.get(`${BASE_URL}/validate-jwt-token`).then((res) => {
+    //         setTokenInfo(res.data);
+    //         setLoading(false);
+    //     });
+    // }, [loggedIn]);
 
     if (!loading) {
         return (
@@ -29,7 +30,7 @@ const ProtectedRoute = ({ component: Component, loggedIn, roles, ...rest }) => {
                     //     else return <Redirect to={{ pathname: "/mails" }} />;
                     // }
 
-                    return <Component {...props} />;
+                    // return <Component {...props} />;
                 }}
             />
         );
