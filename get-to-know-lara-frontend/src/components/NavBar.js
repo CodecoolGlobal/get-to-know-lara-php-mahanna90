@@ -31,7 +31,7 @@ function NavBar() {
                         <MenuIcon />
                     </IconButton>
                     <Typography variant="h6" className={classes.title}>
-                        News
+                        Dashboard
                     </Typography>
                     <Button color="inherit">Login</Button>
                 </Toolbar>
