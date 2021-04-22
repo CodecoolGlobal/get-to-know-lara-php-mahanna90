@@ -16,6 +16,7 @@ import {
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import {Alert, AlertTitle} from "@material-ui/lab";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +37,11 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    alert: {
+        marginTop: '10px',
+        marginBottom: '10px',
+        width: '100%',
+    }
 }));
 
 function Login() {
@@ -62,7 +68,7 @@ function Login() {
                 setLoading(false);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                window.location.href = '/';
+                window.location.href = '/mails';
             })
             .catch(function (error) {
                 alert("Invalid credentials");
@@ -92,6 +98,10 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
+                <Alert severity="warning" className={classes.alert}>
+                    <AlertTitle>Warning</AlertTitle>
+                    <strong>Please sign in to check your mails!</strong>
+                </Alert>
                 <form className={classes.form} noValidate>
                     <TextField
                         variant="outlined"
@@ -141,6 +151,7 @@ function Login() {
                         </Grid>
                     </Grid>
                 </form>
+
             </div>
         </Container>
 
