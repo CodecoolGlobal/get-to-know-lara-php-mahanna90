@@ -1,1 +1,1 @@
-export const BASE_URL = 'http://localhost:3000/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api'
+export const BASE_URL = 'http://localhost/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api'

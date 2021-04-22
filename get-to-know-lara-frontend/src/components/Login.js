@@ -19,7 +19,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {BASE_URL} from "../Constants";
 import {UserContext} from '../contexts/UserContext';
-
+// import cookie from 'react-cookie';
+// import {withCookies} from 'react-cookie';
+// import { Cookies } from 'react-cookie';
+import Cookies from 'js-cookie';
+import {withCookies} from "react-cookie";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -56,40 +60,64 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const [loggedIn, setLoggedIn] = useContext(UserContext);
 
+
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
-        axios.post(`${BASE_URL}/login`, {
-            headers: {
-                "Content-Type": "application/json",
-                "Accepted": "application/json",
-            },
-            email,
-            password,
-        })
+        axios.get(`http://localhost/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/sanctum/csrf-cookie`)
             .then((response) => {
-                setLoading(false);
-                sessionStorage.setItem("user", JSON.stringify(response.data.user));
-                sessionStorage.setItem("token", response.data.token);
-                window.location.href = '/mails';
-                setLoggedIn(true);
+                console.log("sanctum csrf response");
+                console.log(response);
+                // console.log(response.config.xsrfCookieName);
+                // console.log(response.headers.get('X-CSRF-Token'));
+                // console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
+                // const token = Cookies.get('XSRF-TOKEN');
+                // console.log(token);
+                // console.log(document.cookie);
+                // console.log(localStorage.getItem('XSRF-TOKEN'));
+                // Login...
+                // beforeSend: function(xhr) {
+                //     xhr.setRequestHeader("X-CSRF-Token", response.getResponseHeader('X-CSRF-Token'));
+                // }
+                axios.post(`http://localhost/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api/login`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accepted": "application/json",
+                        // 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    data: {
+                        email: email,
+                        password: password,
+                        // _token: '{{csrf_token()}}'
+                    }
+                })
+                    .then((response) => {
+                        console.log("login response");
+                        console.log(response);
+                        setLoading(false);
+                        sessionStorage.setItem("user", JSON.stringify(response.data.user));
+                        sessionStorage.setItem("token", response.data.token);
+                        setLoggedIn(true);
+                        window.location.href = '/mails';
+                    })
+                    .catch(function (error) {
+                        alert("Invalid credentials");
+                    });
             })
-            .catch(function (error) {
-                alert("Invalid credentials");
-            });
+
     };
 
-    if (loading)
-        return (
-            <div style={load}>
-                <Spinner
-                    size={120}
-                    spinnerColor={"#333"}
-                    spinnerWidth={2}
-                    visible={true}
-                    color={'black'}/>
-            </div>
-        );
+    // if (loading)
+    //     return (
+    //         <div style={load}>
+    //             <Spinner
+    //                 size={120}
+    //                 spinnerColor={"#333"}
+    //                 spinnerWidth={2}
+    //                 visible={true}
+    //                 color={'black'}/>
+    //         </div>
+    //     );
 
 
     return (
@@ -106,7 +134,8 @@ function Login() {
                     <AlertTitle>Warning</AlertTitle>
                     <strong>Please sign in to check your mails!</strong>
                 </Alert>
-                <form className={classes.form} >
+                <form className={classes.form} onSubmit={submit}>
+                    <meta name="csrf-token" content="{{ csrf_token() }}"/>
                     <TextField
                         variant="outlined"
                         margin="normal"
@@ -117,6 +146,7 @@ function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
+                        onChange={(e) => setEmail(e.target.value)}
                     />
                     <TextField
                         variant="outlined"
@@ -128,6 +158,7 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        onChange={(e) => setPassword(e.target.value)}
                     />
                     {/*<FormControlLabel*/}
                     {/*    control={<Checkbox value="remember" color="primary" />}*/}

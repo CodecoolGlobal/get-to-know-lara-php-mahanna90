@@ -46,7 +46,7 @@ function Register() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <form className={classes.form} noValidate>
+                <form className={classes.form} >
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
