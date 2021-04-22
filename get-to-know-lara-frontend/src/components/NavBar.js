@@ -33,7 +33,18 @@ function NavBar() {
                     <Typography variant="h6" className={classes.title}>
                         Dashboard
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    {sessionStorage.getItem('token') ?
+                        <>
+                            <Button color="inherit">Profile</Button>
+                            <Button color="inherit">Logout</Button>
+                        </>
+                        :
+                        <>
+                            <Button color="inherit">Login</Button>
+                            <Button color="inherit">Register</Button>
+                        </>
+                    }
+
                 </Toolbar>
             </AppBar>
         </div>
