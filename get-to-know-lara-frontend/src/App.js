@@ -27,7 +27,7 @@ function App() {
                     <NavDrawer/>
                     {/*<Route exact path="/" children={<NavDrawer/>}/>*/}
                     {/*<Route exact path="/register" children={<Register/>}/>*/}
-                    <Route exact path="/login" children={<Login/>}/>
+                    {/*<Route exact path="/login" children={<Login/>}/>*/}
 
                     {/*<UserProvider>*/}
                     {/*    <Route exact path="/mails"*/}

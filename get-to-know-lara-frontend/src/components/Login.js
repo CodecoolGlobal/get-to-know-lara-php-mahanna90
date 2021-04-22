@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import axios from 'axios';
 import Spinner from "react-spinner-material";
 import {makeStyles} from "@material-ui/core/styles";
@@ -18,6 +18,7 @@ import Button from "@material-ui/core/Button";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {BASE_URL} from "../Constants";
+import {UserContext} from '../contexts/UserContext';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +54,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useContext(UserContext);
 
     const submit = (e) => {
         setLoading(true);
@@ -70,6 +72,7 @@ function Login() {
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
                 window.location.href = '/mails';
+                setLoggedIn(true);
             })
             .catch(function (error) {
                 alert("Invalid credentials");

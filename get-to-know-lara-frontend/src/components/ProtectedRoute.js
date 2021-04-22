@@ -24,9 +24,12 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
                 render={(props) => {
                     // if (!tokenInfo.isAuthenticated) {
                     if (!loggedIn) {
+                        console.log("not logged in checked");
                         return <Redirect to={{ pathname: "/login" }} />;
                     } else {
-                        return <Redirect to={{ pathname: "/mails" }} />;
+                        // return <Redirect to={{ pathname: "/mails" }} />;
+                        console.log("else block in protected");
+                        return <Component {...props} />;
                     }
                     // if (!roles.includes(tokenInfo.role.authority)) {
                     //     if (tokenInfo.role.authority === "vendor") return <Redirect to={{ pathname: "/relocation" }} />;

@@ -188,19 +188,15 @@ function MiniDrawer() {
                 </List>
             </Drawer>
             <main className={classes.content}>
-                {sessionStorage.getItem('token') ?
-                    <ProtectedRoute exact path="/mails" component={Login} />
-                    :
-                    <Route path="/login" component={Login} />
-                    // <Redirect to="/login" />
-                }
-                <Route exact path="/register"
-                       render={(props) => (
-                           <>
-                               <Register/>
-                           </>
-                       )}
-                />
+                <Switch>
+                    <Route exact path="/">
+                        {sessionStorage.getItem('token') ?  <Redirect to="/mails" /> : <Redirect to="/login" />}
+                    </Route>
+
+                    <Route exact path="/register" component={Register}/>
+                    <Route exact path="/login" component={Login}/>
+                    <ProtectedRoute exact path="/mails" component={MailList}/>
+                </Switch>
             </main>
         </div>
     );
