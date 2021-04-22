@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import clsx from 'clsx';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -18,9 +18,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MailList from "./MailList";
-import {Alert, AlertTitle} from "@material-ui/lab";
 import Login from "./Login";
 import Button from "@material-ui/core/Button";
+import {Route, Redirect, Switch} from 'react-router-dom';
+import Register from "./Register";
+import ProtectedRoute from "./ProtectedRoute";
 
 const drawerWidth = 240;
 
@@ -98,6 +100,7 @@ function MiniDrawer() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -134,13 +137,13 @@ function MiniDrawer() {
                     <Toolbar className={classes.toolbarButtons}>
                         {sessionStorage.getItem('token') ?
                             <>
-                                <Button color="inherit" >Profile</Button>
-                                <Button color="inherit" >Logout</Button>
+                                <Button color="inherit">Profile</Button>
+                                <Button color="inherit">Logout</Button>
                             </>
                             :
                             <>
-                                <Button color="inherit" >Login</Button>
-                                <Button color="inherit" >Register</Button>
+                                <Button color="inherit">Login</Button>
+                                <Button color="inherit">Register</Button>
                             </>
                         }
                     </Toolbar>
@@ -185,16 +188,25 @@ function MiniDrawer() {
             </Drawer>
             <main className={classes.content}>
                 {sessionStorage.getItem('token') ?
-                    <MailList/>
+                    <Route exact path="/mails"
+                           render={(props) => (
+                               <>
+                                   <MailList/>
+                               </>
+                           )}
+                    />
                     :
-                    <>
-                        <Alert severity="warning">
-                            <AlertTitle>Warning</AlertTitle>
-                            You are not logged in — <strong>Please sign in to check your mails!</strong>
-                        </Alert>
-                        <Login/>
-                    </>
+                    // <Login />
+                    <ProtectedRoute loggedIn={!loggedIn} path="/login" component={Login} />
+                    // <Redirect to="/login" />
                 }
+                <Route exact path="/register"
+                       render={(props) => (
+                           <>
+                               <Register/>
+                           </>
+                       )}
+                />
             </main>
         </div>
     );

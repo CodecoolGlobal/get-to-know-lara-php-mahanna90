@@ -1,24 +1,46 @@
 import React from 'react';
-import {Route, BrowserRouter as Router } from 'react-router-dom';
+import {Route, BrowserRouter as Router, Switch} from 'react-router-dom';
 import './App.css';
 
-import Home from "./components/Home";
+import OldHome from "./components/OldHome";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import MailList from "./components/MailList";
+import {createMuiTheme, ThemeProvider} from "@material-ui/core/styles";
+import {deepOrange, teal} from "@material-ui/core/colors";
+import NavDrawer from "./components/NavDrawer";
 
 function App() {
-  return (
-      <Router>
-        <Route exact path="/" children={<Home />} />
-        <Route exact path="/register" children={<Register />} />
-        <Route exact path="/login" children={<Login />} />
 
-        <Route exact path="/mails"
-          render={(props) => <MailList {...props} />} />
+    const theme = createMuiTheme({
+        palette: {
+            primary: teal,
+            secondary: deepOrange,
+        },
+    });
 
-      </Router>
-  );
+    return (
+        <Router>
+            <ThemeProvider theme={theme}>
+                <NavDrawer/>
+                {/*<Route exact path="/" children={<NavDrawer/>}/>*/}
+                {/*<Route exact path="/register" children={<Register/>}/>*/}
+                <Route exact path="/login" children={<Login/>}/>
+
+                {/*<UserProvider>*/}
+                {/*    <Route exact path="/mails"*/}
+                {/*           render={(props) => <MailList {...props} />}/>*/}
+                {/*    <Route path="/profile"*/}
+                {/*           render={(props) => (*/}
+                {/*               <>*/}
+                {/*                   <ProfilePage/>*/}
+                {/*               </>*/}
+                {/*           )}*/}
+                {/*    />*/}
+                {/*</UserProvider>*/}
+            </ThemeProvider>
+        </Router>
+    );
 }
 
 export default App;

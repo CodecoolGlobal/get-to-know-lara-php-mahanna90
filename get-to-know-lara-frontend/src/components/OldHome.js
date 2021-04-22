@@ -4,7 +4,7 @@ import {deepOrange, teal} from "@material-ui/core/colors";
 import NavDrawer from "./NavDrawer";
 
 
-function Home() {
+function OldHome() {
 
     const theme = createMuiTheme({
         palette: {
@@ -21,4 +21,4 @@ function Home() {
     )
 }
 
-export default Home;
+export default OldHome;
