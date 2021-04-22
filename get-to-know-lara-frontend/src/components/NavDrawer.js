@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import clsx from 'clsx';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -23,6 +23,7 @@ import Button from "@material-ui/core/Button";
 import {Route, Redirect, Switch} from 'react-router-dom';
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
+import {UserContext} from '../contexts/UserContext';
 
 const drawerWidth = 240;
 
@@ -100,7 +101,7 @@ function MiniDrawer() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useContext(UserContext);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -188,16 +189,9 @@ function MiniDrawer() {
             </Drawer>
             <main className={classes.content}>
                 {sessionStorage.getItem('token') ?
-                    <Route exact path="/mails"
-                           render={(props) => (
-                               <>
-                                   <MailList/>
-                               </>
-                           )}
-                    />
+                    <ProtectedRoute exact path="/mails" component={Login} />
                     :
-                    // <Login />
-                    <ProtectedRoute loggedIn={!loggedIn} path="/login" component={Login} />
+                    <Route path="/login" component={Login} />
                     // <Redirect to="/login" />
                 }
                 <Route exact path="/register"

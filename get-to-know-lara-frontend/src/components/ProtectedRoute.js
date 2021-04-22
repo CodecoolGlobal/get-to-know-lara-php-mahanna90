@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, {useContext, useEffect, useState} from "react";
 import { Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import {BASE_URL} from "../Constants";
+import {UserContext} from '../contexts/UserContext';
 
-const ProtectedRoute = ({ component: Component, loggedIn, roles, ...rest }) => {
+const ProtectedRoute = ({ component: Component, ...rest }) => {
     const [tokenInfo, setTokenInfo] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const [loggedIn, setLoggedIn] = useContext(UserContext);
 
     // useEffect(() => {
     //     setLoading(true);
@@ -20,7 +22,8 @@ const ProtectedRoute = ({ component: Component, loggedIn, roles, ...rest }) => {
             <Route
                 {...rest}
                 render={(props) => {
-                    if (!tokenInfo.isAuthenticated) {
+                    // if (!tokenInfo.isAuthenticated) {
+                    if (!loggedIn) {
                         return <Redirect to={{ pathname: "/login" }} />;
                     } else {
                         return <Redirect to={{ pathname: "/mails" }} />;
@@ -34,7 +37,8 @@ const ProtectedRoute = ({ component: Component, loggedIn, roles, ...rest }) => {
                 }}
             />
         );
-    } else return "";
+    }
+    else return "";
 };
 
 // <ProtectedRoute loggedIn={!loggedIn} path="/upload" component={UploadData} roles={["admin", "flotta"]} />
