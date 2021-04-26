@@ -5,7 +5,7 @@ import './App.css';
 import {createMuiTheme, ThemeProvider} from "@material-ui/core/styles";
 import {deepOrange, teal} from "@material-ui/core/colors";
 import Home from "./components/Home";
-import {UserProvider} from "./contexts/UserContext";
+import {MessageProvider} from "./contexts/MessageContext";
 
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
     return (
         <Router>
             <ThemeProvider theme={theme}>
-                <UserProvider>
+                <MessageProvider>
                     <Home/>
                     {/*<Route exact path="/register" children={<Register/>}/>*/}
                     {/*<Route exact path="/login" children={<Login/>}/>*/}
@@ -36,7 +36,7 @@ function App() {
                     {/*           )}*/}
                     {/*    />*/}
                     {/*</UserProvider>*/}
-                </UserProvider>
+                </MessageProvider>
             </ThemeProvider>
         </Router>
     );

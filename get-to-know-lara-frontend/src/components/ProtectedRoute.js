@@ -2,12 +2,12 @@ import React, {useContext, useEffect, useState} from "react";
 import { Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import {BASE_URL} from "../Constants";
-import {UserContext} from '../contexts/UserContext';
+import {MessageContext} from '../contexts/MessageContext';
 
 const ProtectedRoute = ({ component: Component, ...rest }) => {
     const [tokenInfo, setTokenInfo] = useState({});
     const [loading, setLoading] = useState(false);
-    const [loggedIn, setLoggedIn] = useContext(UserContext);
+    const [loggedIn, setLoggedIn] = useContext(MessageContext);
 
     // useEffect(() => {
     //     setLoading(true);

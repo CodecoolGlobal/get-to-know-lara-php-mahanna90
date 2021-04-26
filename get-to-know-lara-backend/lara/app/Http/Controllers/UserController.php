@@ -40,27 +40,25 @@ class UserController extends Controller
     public function register(Request $request)
     {
         try{
-            $validation = $request->validate([
+            $request->validate([
                 'name' => 'required',
                 'email' => 'required|email',
                 'password' => 'required']);
         }
         catch (\Exception $exception){
-            return response()->json("error", Response::HTTP_BAD_REQUEST);
+            $response = [
+                'success' => false,
+                'message' => 'Registration error: ' . $exception->getMessage()
+            ];
+            return response($response, Response::HTTP_BAD_REQUEST);
         }
-
         User::firstOrCreate([
             "name" => $request->get('name'),
             "email" => $request->get('email'),
             "password" => Hash::make( $request->get('password'))]);
-
-//        return response()->json([
-//            'status_code' => 200,
-//            'message' => 'User created successfully'
-//        ]);
-
         $response = [
-            'message' => 'User created successfully'
+            'success' => true,
+            'message' => 'Registration successful'
         ];
 
         return response($response, Response::HTTP_CREATED);

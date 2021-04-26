@@ -31,7 +31,7 @@ Route::post('/mails', [MailController::class, 'store']);
 //Route::put('/mails', [MailController::class, 'update']);
 Route::delete('/mails', [MailController::class, 'destroy']);
 
-Route::post('/registration', [UserController::class, 'register']);
+Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {

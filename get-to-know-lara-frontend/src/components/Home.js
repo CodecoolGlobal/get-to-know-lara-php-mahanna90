@@ -23,10 +23,10 @@ import Button from "@material-ui/core/Button";
 import {Route, Redirect, Switch} from 'react-router-dom';
 import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
-import {UserContext} from '../contexts/UserContext';
 import Link from "@material-ui/core/Link";
 import axios from "axios";
 import {BASE_URL} from "../Constants";
+import {MessageContext, MessageProvider} from "../contexts/MessageContext";
 
 const drawerWidth = 240;
 
@@ -107,8 +107,8 @@ function Home() {
     const classes = useStyles();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
-    const [loggedIn, setLoggedIn] = useContext(UserContext);
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useContext(MessageContext);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -217,15 +217,17 @@ function Home() {
                 </List>
             </Drawer>
             <main className={classes.content}>
+                <MessageProvider>
                 <Switch>
                     <Route exact path="/">
-                        {sessionStorage.getItem('token') ?  <Redirect to="/mails" /> : <Redirect to="/login" />}
+                        {sessionStorage.getItem('token') ?  <Redirect to="/mails" /> : <Redirect to="/login"/>}
                     </Route>
 
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/login" component={Login}/>
                     <ProtectedRoute exact path="/mails" component={MailList}/>
                 </Switch>
+                </MessageProvider>
             </main>
         </div>
     );

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
+import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -11,6 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {BASE_URL} from "../Constants";
+import {Redirect} from "react-router-dom";
+import {MessageContext} from "../contexts/MessageContext";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,6 +40,62 @@ const useStyles = makeStyles((theme) => ({
 function Register() {
     const classes = useStyles();
 
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useContext(MessageContext);
+    const isFirstRender = useRef(true);
+
+    // useEffect(() => {
+    //     setLoading(false);
+    //     console.log("message useEffect");
+    //     console.log(message);
+    //     window.location.href = "/login";
+    // }, [isFirstRender, message])
+
+
+    // useEffect(() => {
+    //     if (isFirstRender.current) {
+    //         isFirstRender.current = false;
+    //         console.log("first render");
+    //     } else {
+    //         console.log("not first render");
+    //     }
+    // }, []);
+
+
+    const submit = (e) => {
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+            return <Redirect to="/register"/>;
+        }
+        setLoading(true);
+        e.preventDefault();
+        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/register`, {
+            name,
+            email,
+            password,
+            }, {
+                withCredentials: true,
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accepted": "application/json",
+                },
+            })
+            .then((response) => {
+                console.log(response.data.message);
+                setMessage(response.data.message);
+                setLoading(false);
+                window.location.href = "/login";
+            })
+            .catch(function (error) {
+                alert("Invalid credentials: " + error);
+            });
+    };
+
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -46,7 +106,7 @@ function Register() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
-                <form className={classes.form} >
+                <form className={classes.form} onSubmit={submit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
@@ -57,6 +117,7 @@ function Register() {
                                 label="Name"
                                 name="name"
                                 autoComplete="name"
+                                onChange={(e) => setName(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -68,6 +129,7 @@ function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -80,6 +142,19 @@ function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="confirm"
+                                label="Confirm password"
+                                type="password"
+                                id="password"
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                             />
                         </Grid>
                     </Grid>

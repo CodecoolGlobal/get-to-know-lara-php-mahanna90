@@ -35,13 +35,13 @@ function NavBar() {
                     </Typography>
                     {sessionStorage.getItem('token') ?
                         <>
-                            <Button color="inherit">Profile</Button>
-                            <Button color="inherit">Logout</Button>
+                            <Button color="inherit" >Profile</Button>
+                            <Button color="inherit" >Logout</Button>
                         </>
                         :
                         <>
-                            <Button color="inherit">Login</Button>
-                            <Button color="inherit">Register</Button>
+                            <Button color="inherit" >Login</Button>
+                            <Button color="inherit" >Register</Button>
                         </>
                     }
 

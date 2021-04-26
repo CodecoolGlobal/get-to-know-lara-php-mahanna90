@@ -18,6 +18,7 @@ import Button from "@material-ui/core/Button";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {BASE_URL} from "../Constants";
+import {MessageContext} from "../contexts/MessageContext";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -53,20 +54,23 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useContext(MessageContext);
 
-
+    console.log("message");
+    console.log(message);
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
         axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/login`, {
+            email,
+            password,
+        },{
             withCredentials: true,
             mode: "cors",
             headers: {
                 "Content-Type": "application/json",
                 "Accepted": "application/json",
             },
-            email,
-            password,
         })
             .then((response) => {
                 setLoading(false);
@@ -75,7 +79,7 @@ function Login() {
                 window.location.href = '/mails';
             })
             .catch(function (error) {
-                alert("Invalid credentials");
+                alert("Invalid credentials: " + error);
             });
     };
 
@@ -105,6 +109,7 @@ function Login() {
                 <Alert severity="warning" className={classes.alert}>
                     <AlertTitle>Warning</AlertTitle>
                     <strong>Please sign in to check your mails!</strong>
+                    <p>{message !== "" ? message : "no message"}</p>
                 </Alert>
                 <form className={classes.form} onSubmit={submit}>
                     <TextField
