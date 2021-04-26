@@ -18,13 +18,6 @@ import Button from "@material-ui/core/Button";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {BASE_URL} from "../Constants";
-import {UserContext} from '../contexts/UserContext';
-// import cookie from 'react-cookie';
-// import {withCookies} from 'react-cookie';
-// import { Cookies } from 'react-cookie';
-// import Cookies from 'js-cookie';
-import cookie from 'react-cookies';
-
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,27 +53,12 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [loggedIn, setLoggedIn] = useContext(UserContext);
 
 
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
-        // axios.get(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/sanctum/csrf-cookie`, {
-        //     withCredentials: true,
-        //     mode: "cors",
-        // })
-        //     .then((response) => {
-        //         console.log("sanctum csrf response");
-        //         console.log(response);
-        //         cookie.save(response);
-        //
-        //     });
-        console.log("email");
-        console.log(email);
-        console.log("password");
-        console.log(password);
-        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api/login`, {
+        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/login`, {
             withCredentials: true,
             mode: "cors",
             headers: {
@@ -91,19 +69,14 @@ function Login() {
             password,
         })
             .then((response) => {
-                console.log("login response");
-                console.log(response);
                 setLoading(false);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                setLoggedIn(!loggedIn);
-                console.log(loggedIn);
                 window.location.href = '/mails';
             })
             .catch(function (error) {
                 alert("Invalid credentials");
             });
-
     };
 
     // if (loading)

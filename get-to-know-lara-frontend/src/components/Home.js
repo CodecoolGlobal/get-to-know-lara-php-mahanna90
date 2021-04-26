@@ -25,6 +25,8 @@ import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import {UserContext} from '../contexts/UserContext';
 import Link from "@material-ui/core/Link";
+import axios from "axios";
+import {BASE_URL} from "../Constants";
 
 const drawerWidth = 240;
 
@@ -106,6 +108,7 @@ function Home() {
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [loggedIn, setLoggedIn] = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -114,6 +117,27 @@ function Home() {
     const handleDrawerClose = () => {
         setOpen(false);
     };
+
+    function logOut(e) {
+        setLoading(true);
+        e.preventDefault();
+        const token = sessionStorage.getItem('token');
+        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/logout`, {},{
+            withCredentials: true,
+            mode: "cors",
+            headers: {
+                'Authorization': `Bearer ${token}`,
+            },
+        })
+            .then((response) => {
+                setLoading(false);
+                sessionStorage.clear();
+                window.location.href = '/';
+            })
+            .catch(function (error) {
+                alert("Logout error");
+            });
+    }
 
     return (
         <div className={classes.root}>
@@ -143,7 +167,7 @@ function Home() {
                         {sessionStorage.getItem('token') ?
                             <>
                                 <Button color="inherit">Profile</Button>
-                                <Button color="inherit">Logout</Button>
+                                <Button onClick={logOut} color="inherit">Logout</Button>
                             </>
                             :
                             <>

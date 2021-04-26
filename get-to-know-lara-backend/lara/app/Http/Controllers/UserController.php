@@ -66,24 +66,19 @@ class UserController extends Controller
         return response($response, Response::HTTP_CREATED);
     }
 
-    // does not work, cannot find token
     public function logout(Request $request)
     {
-
-        $userTokens = $request->user()->tokens;
-
-        foreach($userTokens as $token) {
-            $token->revoke();
+        try {
+            auth()->user()->tokens()->delete();
+        } catch (\Exception $exception) {
+            $response = [
+                'success' => false,
+                'message' => 'Logout error'
+            ];
+            return response($response, Response::HTTP_UNAUTHORIZED);
         }
-
-//        auth()->user()->tokens()->delete();
-//        $request->user()->currentAccessToken()->delete();
-
-//        auth()->user()->tokens->each(function($token, $key) {
-//            $token->delete();
-//        });
-
         $response = [
+            'success' => true,
             'message' => 'User logged out'
         ];
 

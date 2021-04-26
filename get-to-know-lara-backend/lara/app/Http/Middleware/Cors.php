@@ -22,8 +22,7 @@ class Cors
             'Access-Control-Allow-Methods' => 'POST,GET,OPTIONS,PUT,DELETE',
             'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin, Authorization',
         ];
-//        $_COOKIE['X-CSRF-TOKEN'] = csrf_token();
-//        setcookie('X-CSRF-TOKEN', csrf_token());
+
         if ($request->getMethod() == "OPTIONS"){
             //The client-side application can set only headers allowed in Access-Control-Allow-Headers
             return response()->json('OK',200,$headers);
