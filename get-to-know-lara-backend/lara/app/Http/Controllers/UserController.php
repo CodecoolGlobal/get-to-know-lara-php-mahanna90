@@ -12,7 +12,7 @@ class UserController extends Controller
     function login(Request $request)
     {
         try{
-            $request->validate([
+            $validation = $request->validate([
                 'email' => 'required|email',
                 'password' => 'required']);
         }

@@ -23,7 +23,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
                 {...rest}
                 render={(props) => {
                     // if (!tokenInfo.isAuthenticated) {
-                    if (!loggedIn) {
+                    if (!sessionStorage.getItem('token')) {
                         console.log("not logged in checked");
                         return <Redirect to={{ pathname: "/login" }} />;
                     } else {

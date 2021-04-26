@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [UserController::class, 'logout']);
 });
 
-//Route::resource('mails', 'MailController');
+//Route::resource('mails', MailController::class);
 
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();

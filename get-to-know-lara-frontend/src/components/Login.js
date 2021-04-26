@@ -22,8 +22,10 @@ import {UserContext} from '../contexts/UserContext';
 // import cookie from 'react-cookie';
 // import {withCookies} from 'react-cookie';
 // import { Cookies } from 'react-cookie';
-import Cookies from 'js-cookie';
-import {withCookies} from "react-cookie";
+// import Cookies from 'js-cookie';
+import cookie from 'react-cookies';
+
+
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -64,46 +66,43 @@ function Login() {
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
-        axios.get(`http://localhost/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/sanctum/csrf-cookie`)
+        // axios.get(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/sanctum/csrf-cookie`, {
+        //     withCredentials: true,
+        //     mode: "cors",
+        // })
+        //     .then((response) => {
+        //         console.log("sanctum csrf response");
+        //         console.log(response);
+        //         cookie.save(response);
+        //
+        //     });
+        console.log("email");
+        console.log(email);
+        console.log("password");
+        console.log(password);
+        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api/login`, {
+            withCredentials: true,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accepted": "application/json",
+            },
+            email,
+            password,
+        })
             .then((response) => {
-                console.log("sanctum csrf response");
+                console.log("login response");
                 console.log(response);
-                // console.log(response.config.xsrfCookieName);
-                // console.log(response.headers.get('X-CSRF-Token'));
-                // console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'))
-                // const token = Cookies.get('XSRF-TOKEN');
-                // console.log(token);
-                // console.log(document.cookie);
-                // console.log(localStorage.getItem('XSRF-TOKEN'));
-                // Login...
-                // beforeSend: function(xhr) {
-                //     xhr.setRequestHeader("X-CSRF-Token", response.getResponseHeader('X-CSRF-Token'));
-                // }
-                axios.post(`http://localhost/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/api/login`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accepted": "application/json",
-                        // 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    },
-                    data: {
-                        email: email,
-                        password: password,
-                        // _token: '{{csrf_token()}}'
-                    }
-                })
-                    .then((response) => {
-                        console.log("login response");
-                        console.log(response);
-                        setLoading(false);
-                        sessionStorage.setItem("user", JSON.stringify(response.data.user));
-                        sessionStorage.setItem("token", response.data.token);
-                        setLoggedIn(true);
-                        window.location.href = '/mails';
-                    })
-                    .catch(function (error) {
-                        alert("Invalid credentials");
-                    });
+                setLoading(false);
+                sessionStorage.setItem("user", JSON.stringify(response.data.user));
+                sessionStorage.setItem("token", response.data.token);
+                setLoggedIn(!loggedIn);
+                console.log(loggedIn);
+                window.location.href = '/mails';
             })
+            .catch(function (error) {
+                alert("Invalid credentials");
+            });
 
     };
 
@@ -135,7 +134,6 @@ function Login() {
                     <strong>Please sign in to check your mails!</strong>
                 </Alert>
                 <form className={classes.form} onSubmit={submit}>
-                    <meta name="csrf-token" content="{{ csrf_token() }}"/>
                     <TextField
                         variant="outlined"
                         margin="normal"
