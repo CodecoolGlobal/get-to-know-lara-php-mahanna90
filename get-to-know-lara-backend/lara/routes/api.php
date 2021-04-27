@@ -30,6 +30,11 @@ Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+//    Route::get('/validate-token', function (Request $request) {
+//        return $request->user();
+//    });
+    Route::get('/user/{id}', [UserController::class, 'show']);
+    Route::get('/validate-token', [UserController::class, 'validateToken']);
     Route::get('/mails', [MailController::class, 'index']);
     Route::put('/mails', [MailController::class, 'update']);
     Route::post('/mails', [MailController::class, 'store']);

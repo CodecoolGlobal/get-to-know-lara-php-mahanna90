@@ -56,7 +56,9 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [inputError, setInputError] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
+
 
 
     const submit = (e) => {
@@ -77,10 +79,13 @@ function Login() {
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
                 setLoading(false);
+                setInputError(false);
                 setMessage(MESSAGES.LOGIN_SUCCESS_MSG);
                 history.push("/mails");
             })
-            .catch(function (error) {
+            .catch(error => {
+                console.log(error);
+                setInputError(true);
                 alert("Invalid credentials: " + error);
             });
     };
@@ -108,16 +113,21 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                {message === MESSAGES.DEFAULT_MSG?
+                {message === MESSAGES.DEFAULT_MSG ?
                     <Alert severity="warning" className={classes.alert}>
                         <AlertTitle>Warning</AlertTitle>
                         <strong>{MESSAGES.LOGIN_WARNING_MSG}</strong>
                     </Alert>
-                    :
-                    <Alert severity="success" className={classes.alert}>
-                        <AlertTitle>Success</AlertTitle>
-                        <strong>{MESSAGES.REG_SUCCESS_MSG}</strong>
-                    </Alert>
+                    : message === MESSAGES.LOGIN_ERROR_MSG ?
+                        <Alert severity="error" className={classes.alert}>
+                            <AlertTitle>Error</AlertTitle>
+                            <strong>{MESSAGES.LOGIN_ERROR_MSG}</strong>
+                        </Alert>
+                        :
+                            <Alert severity="success" className={classes.alert}>
+                                <AlertTitle>Success</AlertTitle>
+                                <strong>{MESSAGES.REG_SUCCESS_MSG}</strong>
+                            </Alert>
                 }
                 <form className={classes.form} onSubmit={submit}>
                     <TextField
@@ -130,7 +140,12 @@ function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
-                        onChange={(e) => setEmail(e.target.value)}
+                        error={inputError === true}
+                        helperText={inputError === true ? 'Incorrect entry' : ' '}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setInputError(false);
+                        }}
                     />
                     <TextField
                         variant="outlined"
@@ -142,7 +157,12 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        error={inputError === true}
+                        helperText={inputError === true ? 'Incorrect entry' : ' '}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            setInputError(false);
+                        }}
                     />
                     {/*<FormControlLabel*/}
                     {/*    control={<Checkbox value="remember" color="primary" />}*/}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -118,6 +119,10 @@ class UserController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function validateToken(Request $request) {
+        return $request->user();
     }
 
 
