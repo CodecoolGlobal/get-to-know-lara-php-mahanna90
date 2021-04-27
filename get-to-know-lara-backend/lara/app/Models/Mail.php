@@ -28,4 +28,9 @@ class Mail extends Model
         'sent' => 'datetime',
         'is_read' => 'boolean',
     ];
+
+//    public function users()
+//    {
+//        return $this->hasOne(User::class, 'id_user_from', 'mail_id');
+//    }
 }

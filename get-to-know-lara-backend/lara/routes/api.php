@@ -26,22 +26,18 @@ Route::get('/user-test', function () {
 //    return response($users, 200);
 });
 
-//Route::get('/mails', [MailController::class, 'index']);
-Route::post('/mails', [MailController::class, 'store']);
-//Route::put('/mails', [MailController::class, 'update']);
-Route::delete('/mails', [MailController::class, 'destroy']);
-
 Route::post('/register', [UserController::class, 'register']);
 Route::post('/login', [UserController::class, 'login']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/mails', [MailController::class, 'index']);
     Route::put('/mails', [MailController::class, 'update']);
+    Route::post('/mails', [MailController::class, 'store']);
+    Route::delete('/mails', [MailController::class, 'destroy']);
+    Route::get('/mails/sent/{id}', [MailController::class, 'showByUser']);
+    Route::get('/mails/view/{id}', [MailController::class, 'showEmail']);
     Route::post('/logout', [UserController::class, 'logout']);
 });
 
 //Route::resource('mails', MailController::class);
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});

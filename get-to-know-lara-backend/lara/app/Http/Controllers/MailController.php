@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mail;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class MailController extends Controller
@@ -15,7 +16,7 @@ class MailController extends Controller
     public function index()
     {
         // get all emails
-        return Mail::all();
+        return Mail::all()->sortByDesc("sent");
     }
 
     /**
@@ -36,10 +37,21 @@ class MailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function showEmail($id)
     {
         //
         return Mail::find($id);
+    }
+
+    public function showByUser($id)
+    {
+
+        return Mail::where('id_user_from', $id)->orderBy('sent', 'DESC')->get();
+
+//        $user = User::find($id);
+//        $mails = $user->mails()->orderBy('sent', 'DESC')->get();
+////        dd($mails);
+//        return $mails;
     }
 
     /**
