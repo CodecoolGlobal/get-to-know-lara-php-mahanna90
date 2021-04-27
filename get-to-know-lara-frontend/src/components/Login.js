@@ -76,6 +76,8 @@ function Login() {
                 setLoading(false);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
+                console.log("token is set:");
+                console.log(sessionStorage.getItem("token"));
                 history.push("/mails");
             })
             .catch(function (error) {
