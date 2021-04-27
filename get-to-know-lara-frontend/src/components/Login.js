@@ -85,8 +85,9 @@ function Login() {
             })
             .catch(error => {
                 console.log(error);
+                setMessage(MESSAGES.LOGIN_ERROR_MSG);
                 setInputError(true);
-                alert("Invalid credentials: " + error);
+                // alert("Invalid credentials: " + error);
             });
     };
 
