@@ -13,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {BASE_URL} from "../Constants";
-import {Redirect} from "react-router-dom";
 import {MessageContext} from "../contexts/MessageContext";
+import { useHistory } from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Register() {
     const classes = useStyles();
+    const history = useHistory();
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -46,30 +47,18 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
-    const isFirstRender = useRef(true);
 
-    // useEffect(() => {
-    //     setLoading(false);
-    //     console.log("message useEffect");
-    //     console.log(message);
-    //     window.location.href = "/login";
-    // }, [isFirstRender, message])
-
-
-    // useEffect(() => {
-    //     if (isFirstRender.current) {
-    //         isFirstRender.current = false;
-    //         console.log("first render");
-    //     } else {
-    //         console.log("not first render");
-    //     }
-    // }, []);
-
+    useEffect(() => {
+        if (message !== "") {
+            setLoading(false);
+            history.push("/login");
+        }
+    }, [message])
 
     const submit = (e) => {
         if (password !== confirmPassword) {
             alert("Passwords do not match");
-            return <Redirect to="/register"/>;
+            history.push("/register");
         }
         setLoading(true);
         e.preventDefault();
@@ -87,9 +76,7 @@ function Register() {
             })
             .then((response) => {
                 console.log(response.data.message);
-                setMessage(response.data.message);
-                setLoading(false);
-                window.location.href = "/login";
+                setMessage(prevMessage => response.data.message);
             })
             .catch(function (error) {
                 alert("Invalid credentials: " + error);

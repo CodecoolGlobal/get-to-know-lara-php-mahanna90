@@ -19,6 +19,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
 import {BASE_URL} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
+import { useHistory } from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Login() {
     const classes = useStyles();
+    const history = useHistory();
 
     const load = {position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)"};
 
@@ -56,8 +58,6 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
 
-    console.log("message");
-    console.log(message);
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
@@ -76,7 +76,7 @@ function Login() {
                 setLoading(false);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                window.location.href = '/mails';
+                history.push("/mails");
             })
             .catch(function (error) {
                 alert("Invalid credentials: " + error);
@@ -106,11 +106,17 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                <Alert severity="warning" className={classes.alert}>
-                    <AlertTitle>Warning</AlertTitle>
-                    <strong>Please sign in to check your mails!</strong>
-                    <p>{message !== "" ? message : "no message"}</p>
-                </Alert>
+                {message === "" ?
+                    <Alert severity="warning" className={classes.alert}>
+                        <AlertTitle>Warning</AlertTitle>
+                        <strong>Please sign in to check your mails!</strong>
+                    </Alert>
+                    :
+                    <Alert severity="success" className={classes.alert}>
+                        <AlertTitle>Success</AlertTitle>
+                        <strong>Registration successful, please log in!</strong>
+                    </Alert>
+                }
                 <form className={classes.form} onSubmit={submit}>
                     <TextField
                         variant="outlined"

@@ -26,7 +26,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import Link from "@material-ui/core/Link";
 import axios from "axios";
 import {BASE_URL} from "../Constants";
-import {MessageContext, MessageProvider} from "../contexts/MessageContext";
+import {MessageContext} from "../contexts/MessageContext";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 240;
 
@@ -105,6 +106,7 @@ const useStyles = makeStyles((theme) => ({
 
 function Home() {
     const classes = useStyles();
+    const history = useHistory();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
     const [loading, setLoading] = useState(false);
@@ -132,7 +134,7 @@ function Home() {
             .then((response) => {
                 setLoading(false);
                 sessionStorage.clear();
-                window.location.href = '/';
+                history.push("/");
             })
             .catch(function (error) {
                 alert("Logout error");
@@ -217,17 +219,14 @@ function Home() {
                 </List>
             </Drawer>
             <main className={classes.content}>
-                <MessageProvider>
                 <Switch>
                     <Route exact path="/">
                         {sessionStorage.getItem('token') ?  <Redirect to="/mails" /> : <Redirect to="/login"/>}
                     </Route>
-
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/login" component={Login}/>
                     <ProtectedRoute exact path="/mails" component={MailList}/>
                 </Switch>
-                </MessageProvider>
             </main>
         </div>
     );
