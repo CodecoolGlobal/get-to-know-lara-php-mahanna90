@@ -155,7 +155,8 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+    // orig param: null
+    'domain' => env('SESSION_DOMAIN', '^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$'),
 
     /*
     |--------------------------------------------------------------------------
