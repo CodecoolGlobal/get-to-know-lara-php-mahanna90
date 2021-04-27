@@ -6,6 +6,7 @@ import {BASE_URL, MESSAGES} from "../Constants";
 function MailList() {
     const [mails, setMails] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
 
     useEffect(() => {
         setLoading(true);
@@ -18,7 +19,7 @@ function MailList() {
                 'Authorization': `Bearer ${sessionStorage.getItem('token')}`
             },
             params: {
-                id: 7,
+                id: user.id,
             }
         })
             .then((res) => {
