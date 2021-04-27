@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect, useRef} from 'react';
 import clsx from 'clsx';
 import {makeStyles, useTheme} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -25,9 +25,10 @@ import Register from "./Register";
 import ProtectedRoute from "./ProtectedRoute";
 import Link from "@material-ui/core/Link";
 import axios from "axios";
-import {BASE_URL} from "../Constants";
+import {BASE_URL, MESSAGES} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
 import { useHistory } from "react-router-dom";
+
 
 const drawerWidth = 240;
 
@@ -112,6 +113,7 @@ function Home() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
 
+
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -132,8 +134,9 @@ function Home() {
             },
         })
             .then((response) => {
-                setLoading(false);
                 sessionStorage.clear();
+                setLoading(false);
+                setMessage(MESSAGES.DEFAULT_MSG);
                 history.push("/");
             })
             .catch(function (error) {
@@ -166,18 +169,19 @@ function Home() {
                         Dashboard
                     </Typography>
                     <Toolbar className={classes.toolbarButtons}>
-                        {sessionStorage.getItem('token') ?
+                        <div key={message}>
+                        {sessionStorage.getItem('token') && message === MESSAGES.LOGIN_SUCCESS_MSG ?
                             <>
                                 <Button color="inherit">Profile</Button>
                                 <Button onClick={logOut} color="inherit">Logout</Button>
                             </>
                             :
                             <>
-                                <Button component={Link} href={"/login"} color="inherit">Login</Button>
-                                <Button component={Link} href={"/register"} color="inherit">Register</Button>
+                                <Button onClick={(e) => history.push("/login")} color="inherit">Login</Button>
+                                <Button onClick={(e) => history.push("/register")} color="inherit">Register</Button>
                             </>
-
                         }
+                        </div>
                     </Toolbar>
                 </Toolbar>
             </AppBar>

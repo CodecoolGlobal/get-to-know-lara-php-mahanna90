@@ -12,7 +12,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import {BASE_URL} from "../Constants";
+import {BASE_URL, MESSAGES} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
 import { useHistory } from "react-router-dom";
 
@@ -49,7 +49,7 @@ function Register() {
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
-        if (message !== "") {
+        if (message !== MESSAGES.DEFAULT_MSG) {
             setLoading(false);
             history.push("/login");
         }

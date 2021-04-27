@@ -20,23 +20,11 @@ function App() {
     return (
         <Router>
             <ThemeProvider theme={theme}>
-                <MessageProvider>
-                    <Home/>
-                    {/*<Route exact path="/register" children={<Register/>}/>*/}
-                    {/*<Route exact path="/login" children={<Login/>}/>*/}
 
-                    {/*<UserProvider>*/}
-                    {/*    <Route exact path="/mails"*/}
-                    {/*           render={(props) => <MailList {...props} />}/>*/}
-                    {/*    <Route path="/profile"*/}
-                    {/*           render={(props) => (*/}
-                    {/*               <>*/}
-                    {/*                   <ProfilePage/>*/}
-                    {/*               </>*/}
-                    {/*           )}*/}
-                    {/*    />*/}
-                    {/*</UserProvider>*/}
-                </MessageProvider>
+                    <MessageProvider>
+                        <Home/>
+                    </MessageProvider>
+
             </ThemeProvider>
         </Router>
     );

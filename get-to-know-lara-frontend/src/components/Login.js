@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import axios from 'axios';
 import Spinner from "react-spinner-material";
 import {makeStyles} from "@material-ui/core/styles";
@@ -17,9 +17,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import {Alert, AlertTitle} from "@material-ui/lab";
-import {BASE_URL} from "../Constants";
+import {BASE_URL, MESSAGES} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
-import { useHistory } from "react-router-dom";
+import {useHistory} from "react-router-dom";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -58,13 +58,14 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
 
+
     const submit = (e) => {
         setLoading(true);
         e.preventDefault();
         axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/login`, {
             email,
             password,
-        },{
+        }, {
             withCredentials: true,
             mode: "cors",
             headers: {
@@ -73,11 +74,10 @@ function Login() {
             },
         })
             .then((response) => {
-                setLoading(false);
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                console.log("token is set:");
-                console.log(sessionStorage.getItem("token"));
+                setLoading(false);
+                setMessage(MESSAGES.LOGIN_SUCCESS_MSG);
                 history.push("/mails");
             })
             .catch(function (error) {
@@ -108,15 +108,15 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                {message === "" ?
+                {message === MESSAGES.DEFAULT_MSG?
                     <Alert severity="warning" className={classes.alert}>
                         <AlertTitle>Warning</AlertTitle>
-                        <strong>Please sign in to check your mails!</strong>
+                        <strong>{MESSAGES.LOGIN_WARNING_MSG}</strong>
                     </Alert>
                     :
                     <Alert severity="success" className={classes.alert}>
                         <AlertTitle>Success</AlertTitle>
-                        <strong>Registration successful, please log in!</strong>
+                        <strong>{MESSAGES.REG_SUCCESS_MSG}</strong>
                     </Alert>
                 }
                 <form className={classes.form} onSubmit={submit}>
