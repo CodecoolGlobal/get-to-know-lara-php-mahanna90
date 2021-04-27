@@ -33,10 +33,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/user/{id}', [UserController::class, 'show']);
     Route::get('/validate-token', [UserController::class, 'validateToken']);
     Route::get('/mails', [MailController::class, 'index']);
+    Route::get('/mails/inbox', [MailController::class, 'inbox']);
     Route::put('/mails', [MailController::class, 'update']);
     Route::post('/mails', [MailController::class, 'store']);
     Route::delete('/mails', [MailController::class, 'destroy']);
-    Route::get('/mails/sent/{id}', [MailController::class, 'showByUser']);
+    Route::get('/mails/sent', [MailController::class, 'showByUser']);
     Route::get('/mails/view/{id}', [MailController::class, 'showEmail']);
     Route::post('/logout', [UserController::class, 'logout']);
 });

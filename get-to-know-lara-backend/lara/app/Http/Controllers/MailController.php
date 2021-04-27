@@ -19,6 +19,11 @@ class MailController extends Controller
         return Mail::all()->sortByDesc("sent");
     }
 
+    public function inbox(Request $request)
+    {
+        return Mail::where('id_user_to', $request->get('id'))->orderBy('sent', 'DESC')->get();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -43,10 +48,9 @@ class MailController extends Controller
         return Mail::find($id);
     }
 
-    public function showByUser($id)
+    public function showByUser(Request $request)
     {
-
-        return Mail::where('id_user_from', $id)->orderBy('sent', 'DESC')->get();
+        return Mail::where('id_user_from', $request->get('id'))->orderBy('sent', 'DESC')->get();
 
 //        $user = User::find($id);
 //        $mails = $user->mails()->orderBy('sent', 'DESC')->get();
