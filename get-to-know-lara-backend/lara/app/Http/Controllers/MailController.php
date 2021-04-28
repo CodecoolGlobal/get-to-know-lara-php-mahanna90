@@ -21,7 +21,12 @@ class MailController extends Controller
 
     public function inbox(Request $request)
     {
-        return Mail::where('id_user_to', $request->get('id'))->orderBy('sent', 'DESC')->get();
+        $mails = Mail::where('id_user_to', $request->get('id'))->orderBy('sent', 'DESC')->get();
+        foreach($mails as $mail) {
+            $sender = User::find($mail->id_user_from);
+            $mail["sender"] = $sender;
+        }
+        return $mails;
     }
 
     /**
