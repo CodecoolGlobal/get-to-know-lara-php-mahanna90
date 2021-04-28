@@ -18,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MailList from "./MailList";
+import SentList from "./SentList";
 import Login from "./Login";
 import Button from "@material-ui/core/Button";
 import {Route, Redirect, Switch} from 'react-router-dom';
@@ -208,7 +209,7 @@ function Home() {
                 <Divider/>
                 <List>
                     <ListItem button key={"Inbox"}>
-                        <ListItemIcon><MailIcon/></ListItemIcon>
+                        <ListItemIcon><MailIcon onClick={(e) => history.push("/mails")}/></ListItemIcon>
                         <ListItemText primary={"Inbox"}/>
                     </ListItem>
                     <ListItem button key={"New"}>
@@ -216,7 +217,7 @@ function Home() {
                         <ListItemText primary={"New"}/>
                     </ListItem>
                     <ListItem button key={"Sent"}>
-                        <ListItemIcon><SendIcon/></ListItemIcon>
+                        <ListItemIcon><SendIcon onClick={(e) => history.push("/mails/sent")} /></ListItemIcon>
                         <ListItemText primary={"Sent"}/>
                     </ListItem>
                 </List>
@@ -236,6 +237,7 @@ function Home() {
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/login" component={Login}/>
                     <ProtectedRoute exact path="/mails" component={MailList}/>
+                    <ProtectedRoute exact path="/mails/sent" component={SentList}/>
                 </Switch>
             </main>
         </div>

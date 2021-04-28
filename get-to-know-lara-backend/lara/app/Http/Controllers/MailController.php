@@ -55,8 +55,14 @@ class MailController extends Controller
 
     public function showByUser(Request $request)
     {
-        return Mail::where('id_user_from', $request->get('id'))->orderBy('sent', 'DESC')->get();
+        $sentMails = Mail::where('id_user_from', $request->get('id'))->orderBy('sent', 'DESC')->get();
 
+        foreach($sentMails as $mail) {
+            $target = User::find($mail->id_user_to);
+            $mail["target"] = $target;
+        }
+
+        return $sentMails;
 //        $user = User::find($id);
 //        $mails = $user->mails()->orderBy('sent', 'DESC')->get();
 ////        dd($mails);
