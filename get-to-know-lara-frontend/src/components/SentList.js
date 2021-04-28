@@ -144,7 +144,7 @@ function SentList() {
                                         {mail.is_read ? <IconButton><DraftsIcon fontSize={"default"} color={"primary"}/></IconButton>
                                             : <IconButton><MailIcon fontSize={"default"} color={"primary"}/></IconButton>}
                                     </TableCell>
-                                    <TableCell align="left" className={classes.rowText}>{mail.target.name}</TableCell>
+                                    <TableCell align="left" className={classes.rowText}>{mail.target ? mail.target.name : ""}</TableCell>
                                     <TableCell align="left" className={classes.rowText}>
                                         <p className={classes.subjectRow}>{mail.subject}</p>
                                         <p className={classes.messageRow}>{mail.message}</p></TableCell>

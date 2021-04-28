@@ -32,6 +32,7 @@ import { useHistory } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SendIcon from "@material-ui/icons/Send";
 import CreateIcon from '@material-ui/icons/Create';
+import ComposeMail from "./ComposeMail";
 
 const drawerWidth = 240;
 
@@ -212,9 +213,9 @@ function Home() {
                         <ListItemIcon><MailIcon onClick={(e) => history.push("/mails")}/></ListItemIcon>
                         <ListItemText primary={"Inbox"}/>
                     </ListItem>
-                    <ListItem button key={"New"}>
-                        <ListItemIcon><CreateIcon/></ListItemIcon>
-                        <ListItemText primary={"New"}/>
+                    <ListItem button key={"Compose"}>
+                        <ListItemIcon><CreateIcon onClick={(e) => history.push("/mails/compose")}/></ListItemIcon>
+                        <ListItemText primary={"Compose"}/>
                     </ListItem>
                     <ListItem button key={"Sent"}>
                         <ListItemIcon><SendIcon onClick={(e) => history.push("/mails/sent")} /></ListItemIcon>
@@ -238,6 +239,7 @@ function Home() {
                     <Route exact path="/login" component={Login}/>
                     <ProtectedRoute exact path="/mails" component={MailList}/>
                     <ProtectedRoute exact path="/mails/sent" component={SentList}/>
+                    <ProtectedRoute exact path="/mails/compose" component={ComposeMail}/>
                 </Switch>
             </main>
         </div>

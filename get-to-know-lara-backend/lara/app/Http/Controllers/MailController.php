@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Mail;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use function Illuminate\Events\queueable;
 
 class MailController extends Controller
 {
@@ -23,7 +25,9 @@ class MailController extends Controller
     {
         $mails = Mail::where('id_user_to', $request->get('id'))->orderBy('sent', 'DESC')->get();
         foreach($mails as $mail) {
-            $sender = User::find($mail->id_user_from);
+            $userController = new UserController();
+//            $sender = User::find($mail->id_user_from);
+            $sender = $userController->show($mail->id_user_from);
             $mail["sender"] = $sender;
         }
         return $mails;
@@ -37,8 +41,39 @@ class MailController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        return Mail::create($request->all());
+        try{
+            $request->validate([
+                'subject' => 'required',
+                'email' => 'required|email',
+                'message' => 'required',
+                'id_user_from' => 'required']);
+        }
+        catch (\Exception $exception){
+            $response = [
+                'success' => false,
+                'message' => 'Error during email sending: ' . $exception->getMessage()
+            ];
+            return response($response, Response::HTTP_BAD_REQUEST);
+        }
+
+        $userController = new UserController();
+        $targetUser = $userController->findByEmail($request->get('email'));
+        if (!$targetUser) {
+            $response = [
+                'success' => false,
+                'message' => "User " . $request->get('email') . " does not exist!"
+            ];
+            return response($response, Response::HTTP_NOT_FOUND);
+        }
+
+        $mail["id_user_from"] = $request->get("id_user_from");
+        $mail["id_user_to"] = $targetUser->pull('id');
+        $mail["subject"] = $request->get("subject");
+        $mail["message"] = $request->get("message");
+        $mail["is_read"] = false;
+        $mail["sent"] = NOW();
+
+        return Mail::create($mail);
     }
 
     /**

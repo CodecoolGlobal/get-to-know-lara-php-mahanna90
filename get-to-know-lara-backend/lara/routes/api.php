@@ -35,9 +35,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/mails', [MailController::class, 'index']);
     Route::get('/mails/inbox', [MailController::class, 'inbox']);
     Route::put('/mails', [MailController::class, 'update']);
-    Route::post('/mails', [MailController::class, 'store']);
     Route::delete('/mails', [MailController::class, 'destroy']);
     Route::get('/mails/sent', [MailController::class, 'showByUser']);
+//    Route::post('/mails', [MailController::class, 'store']);
+    Route::post('/mails/compose', [MailController::class, 'store']);
     Route::get('/mails/view/{id}', [MailController::class, 'showEmail']);
     Route::post('/logout', [UserController::class, 'logout']);
 });
