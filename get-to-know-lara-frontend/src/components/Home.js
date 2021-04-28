@@ -28,7 +28,9 @@ import axios from "axios";
 import {BASE_URL, MESSAGES} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
 import { useHistory } from "react-router-dom";
-
+import DeleteIcon from "@material-ui/icons/Delete";
+import SendIcon from "@material-ui/icons/Send";
+import CreateIcon from '@material-ui/icons/Create';
 
 const drawerWidth = 240;
 
@@ -205,21 +207,25 @@ function Home() {
                 </div>
                 <Divider/>
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItem>
-                    ))}
+                    <ListItem button key={"Inbox"}>
+                        <ListItemIcon><MailIcon/></ListItemIcon>
+                        <ListItemText primary={"Inbox"}/>
+                    </ListItem>
+                    <ListItem button key={"New"}>
+                        <ListItemIcon><CreateIcon/></ListItemIcon>
+                        <ListItemText primary={"New"}/>
+                    </ListItem>
+                    <ListItem button key={"Sent"}>
+                        <ListItemIcon><SendIcon/></ListItemIcon>
+                        <ListItemText primary={"Sent"}/>
+                    </ListItem>
                 </List>
                 <Divider/>
                 <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItem>
-                    ))}
+                    <ListItem button key={"Trash"}>
+                        <ListItemIcon><DeleteIcon/></ListItemIcon>
+                        <ListItemText primary={"Trash"}/>
+                    </ListItem>
                 </List>
             </Drawer>
             <main className={classes.content}>

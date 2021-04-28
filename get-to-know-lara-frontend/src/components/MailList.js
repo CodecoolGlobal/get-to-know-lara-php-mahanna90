@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
         color: "#00695f",
     },
     fromHeader: {
-        minWidth: '150px',
+        minWidth: '130px',
         fontWeight: 'bold',
         fontSize: '18px',
         color: "#00695f",
