@@ -63,16 +63,15 @@ function Register() {
     }, [message])
 
     const submit = (e) => {
-        if (password !== confirmPassword) {
-            alert("Passwords do not match");
-            history.push("/register");
-        }
         setLoading(true);
         e.preventDefault();
-        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/register`, {
-            name,
-            email,
-            password,
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+        } else {
+            axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/register`, {
+                name,
+                email,
+                password,
             }, {
                 withCredentials: true,
                 mode: "cors",
@@ -81,16 +80,17 @@ function Register() {
                     "Accepted": "application/json",
                 },
             })
-            .then((response) => {
-                console.log(response.data.message);
-                setInputError(false);
-                setMessage(MESSAGES.REG_SUCCESS_MSG);
-            })
-            .catch(function (error) {
-                setInputError(true);
-                setMessage(MESSAGES.REG_ERROR_MSG);
-                // alert("Invalid credentials: " + error);
-            });
+                .then((response) => {
+                    console.log(response.data.message);
+                    setInputError(false);
+                    setMessage(MESSAGES.REG_SUCCESS_MSG);
+                })
+                .catch(function (error) {
+                    setInputError(true);
+                    setMessage(MESSAGES.REG_ERROR_MSG);
+                    // alert("Invalid credentials: " + error);
+                });
+        }
     };
 
     return (
