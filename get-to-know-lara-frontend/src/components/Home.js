@@ -209,16 +209,16 @@ function Home() {
                 </div>
                 <Divider/>
                 <List>
-                    <ListItem button key={"Inbox"}>
-                        <ListItemIcon><MailIcon onClick={(e) => history.push("/mails")}/></ListItemIcon>
+                    <ListItem button key={"Inbox"} onClick={(e) => history.push("/mails")}>
+                        <ListItemIcon><MailIcon /></ListItemIcon>
                         <ListItemText primary={"Inbox"}/>
                     </ListItem>
-                    <ListItem button key={"Compose"}>
-                        <ListItemIcon><CreateIcon onClick={(e) => history.push("/mails/compose")}/></ListItemIcon>
+                    <ListItem button key={"Compose"} onClick={(e) => history.push("/mails/compose")}>
+                        <ListItemIcon><CreateIcon /></ListItemIcon>
                         <ListItemText primary={"Compose"}/>
                     </ListItem>
-                    <ListItem button key={"Sent"}>
-                        <ListItemIcon><SendIcon onClick={(e) => history.push("/mails/sent")} /></ListItemIcon>
+                    <ListItem button key={"Sent"} onClick={(e) => history.push("/mails/sent")}>
+                        <ListItemIcon><SendIcon /></ListItemIcon>
                         <ListItemText primary={"Sent"}/>
                     </ListItem>
                 </List>
