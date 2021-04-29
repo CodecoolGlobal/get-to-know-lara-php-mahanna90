@@ -11,10 +11,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import DeleteIcon from '@material-ui/icons/Delete';
-import MailIcon from '@material-ui/icons/Mail';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import IconButton from "@material-ui/core/IconButton";
+import CustomTableRow from "./CustomTableRow";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -144,19 +141,7 @@ function MailList() {
                         </TableHead>
                         <TableBody>
                             {mails.map((mail) => (
-                                <TableRow key={mail.id} className={classes.row}>
-                                    <TableCell align="center" component="th" scope="row">
-                                        {mail.is_read ? <IconButton><DraftsIcon fontSize={"default"} color={"primary"}/></IconButton>
-                                            : <IconButton><MailIcon fontSize={"default"} color={"primary"}/></IconButton>}
-                                    </TableCell>
-                                    <TableCell align="left" className={classes.rowText}>{mail.sender.name}</TableCell>
-                                    <TableCell align="left" className={classes.rowText}>
-                                        <p className={classes.subjectRow}>{mail.subject}</p>
-                                        <p className={classes.messageRow}>{mail.message.slice(0, 100)}...</p></TableCell>
-                                    <TableCell align="right" className={classes.rowText}>{mail.sent}</TableCell>
-                                    <TableCell align="center">
-                                        <IconButton><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
-                                </TableRow>
+                                <CustomTableRow key={mail.id} mail={mail} isInboxRow={true} />
                             ))}
                         </TableBody>
                     </Table>
