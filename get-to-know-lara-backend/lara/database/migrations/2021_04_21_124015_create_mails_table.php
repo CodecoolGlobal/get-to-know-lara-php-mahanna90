@@ -17,14 +17,14 @@ class CreateMailsTable extends Migration
             $table->id();
 
             $table->unsignedBigInteger('id_user_from')->nullable();
-            $table->foreign('id_user_from')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_user_from')->references('id')->on('users');
 
             $table->unsignedBigInteger('id_user_to')->nullable();
-            $table->foreign('id_user_to')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('id_user_to')->references('id')->on('users');
 
             $table->string('subject');
             $table->text('message');
-            $table->boolean('is_read');
+            $table->boolean('is_read')->default(0)->change();
             $table->timestamp('sent')->nullable();
 
             $table->timestamps();

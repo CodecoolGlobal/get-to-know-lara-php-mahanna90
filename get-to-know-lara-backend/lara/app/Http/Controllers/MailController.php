@@ -76,6 +76,8 @@ class MailController extends Controller
         $mail["message"] = $request->get("message");
         $mail["is_read"] = false;
         $mail["sent"] = NOW();
+        $mail["deleted_by_sender"] = false;
+        $mail["deleted_by_target"] = false;
 
         return Mail::create($mail);
     }

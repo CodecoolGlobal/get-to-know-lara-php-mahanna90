@@ -22,6 +22,8 @@ class Mail extends Model
         'message',
         'is_read',
         'sent',
+        'deleted_by_sender',
+        'deleted_by_target',
     ];
 
     protected $casts = [
