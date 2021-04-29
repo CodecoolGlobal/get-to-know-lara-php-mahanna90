@@ -127,6 +127,13 @@ function Home() {
         setOpen(false);
     };
 
+    useEffect(() => {
+        if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && MESSAGES.LOGIN_SUCCESS_MSG) {
+            setLoading(false);
+            history.push("/");
+        }
+    }, [message])
+
     function logOut(e) {
         setLoading(true);
         e.preventDefault();
@@ -139,14 +146,39 @@ function Home() {
             },
         })
             .then((response) => {
+                console.log("successfully logged out")
                 sessionStorage.clear();
-                setLoading(false);
-                setMessage(MESSAGES.DEFAULT_MSG);
-                history.push("/");
+                setMessage(MESSAGES.LOGIN_WARNING_MSG);
+
             })
             .catch(function (error) {
+                console.log("failed to log out")
                 alert("Logout error");
             });
+    }
+
+    const goToMails = (e) => {
+        if (sessionStorage.getItem('token')) {
+            history.push("/mails")
+        } else {
+            history.push("/login")
+        }
+    }
+
+    const goToSent = (e) => {
+        if (sessionStorage.getItem('token')) {
+            history.push("/mails/sent")
+        } else {
+            history.push("/login")
+        }
+    }
+
+    const goToCompose = (e) => {
+        if (sessionStorage.getItem('token')) {
+            history.push("/mails/compose")
+        } else {
+            history.push("/login")
+        }
     }
 
     return (
@@ -210,15 +242,15 @@ function Home() {
                 </div>
                 <Divider/>
                 <List>
-                    <ListItem button key={"Inbox"} onClick={(e) => history.push("/mails")}>
+                    <ListItem button key={"Inbox"} onClick={goToMails}>
                         <ListItemIcon><MailIcon /></ListItemIcon>
                         <ListItemText primary={"Inbox"}/>
                     </ListItem>
-                    <ListItem button key={"Compose"} onClick={(e) => history.push("/mails/compose")}>
+                    <ListItem button key={"Compose"} onClick={goToCompose}>
                         <ListItemIcon><CreateIcon /></ListItemIcon>
                         <ListItemText primary={"Compose"}/>
                     </ListItem>
-                    <ListItem button key={"Sent"} onClick={(e) => history.push("/mails/sent")}>
+                    <ListItem button key={"Sent"} onClick={goToSent}>
                         <ListItemIcon><SendIcon /></ListItemIcon>
                         <ListItemText primary={"Sent"}/>
                     </ListItem>
@@ -234,7 +266,7 @@ function Home() {
             <main className={classes.content}>
                 <Switch>
                     <Route exact path="/">
-                        {sessionStorage.getItem('token') ?  <Redirect to="/mails" /> : <Redirect to="/login"/>}
+                        { !sessionStorage.getItem('token') ?  <Redirect to="/login"/> : <Redirect to="/mails" /> }
                     </Route>
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/login" component={Login}/>

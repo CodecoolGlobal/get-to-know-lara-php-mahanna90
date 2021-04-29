@@ -59,6 +59,13 @@ function Login() {
     const [inputError, setInputError] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
 
+    useEffect(() => {
+        if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
+            setLoading(false);
+            history.push("/mails");
+        }
+    }, [message])
+
 
     const submit = (e) => {
         setLoading(true);
@@ -77,10 +84,9 @@ function Login() {
             .then((response) => {
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                setLoading(false);
                 setInputError(false);
                 setMessage(MESSAGES.LOGIN_SUCCESS_MSG);
-                history.push("/mails");
+
             })
             .catch(error => {
                 console.log(error);
@@ -113,7 +119,7 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                {message === MESSAGES.DEFAULT_MSG ?
+                {message === MESSAGES.DEFAULT_MSG ||  message === MESSAGES.LOGIN_WARNING_MSG ?
                     <Alert severity="warning" className={classes.alert}>
                         <AlertTitle>Warning</AlertTitle>
                         <strong>{MESSAGES.LOGIN_WARNING_MSG}</strong>

@@ -8,9 +8,8 @@ import {useHistory} from "react-router-dom";
 const ProtectedRoute = ({ component: Component, ...rest }) => {
     const history = useHistory();
     const [tokenInfo, setTokenInfo] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [message, setMessage] = useContext(MessageContext);
-
 
     useEffect(() => {
         setLoading(true);
@@ -24,10 +23,13 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
             },
         })
             .then((res) => {
+                console.log("successfully ran token validation axios fetch")
                 setTokenInfo(res.data);
                 setLoading(false);
+
         })
             .catch(function (error) {
+                console.log("running and failing token validation axios fetch")
                 alert("Token validation error: " + error);
                 setMessage(MESSAGES.LOGIN_ERROR_MSG);
                 sessionStorage.clear();
@@ -41,14 +43,17 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
                 {...rest}
                 render={(props) => {
                     // if (!tokenInfo.isAuthenticated) {
-                    if (!sessionStorage.getItem('token') && !tokenInfo) {
-                        console.log("not logged in checked");
-                        return <Redirect to={{ pathname: "/login" }} />;
-                    } else {
-                        // return <Redirect to={{ pathname: "/mails" }} />;
-                        console.log("else block in protected");
-                        return <Component {...props} />;
+                    if (tokenInfo) {
+                        if (sessionStorage.getItem('token') && tokenInfo.isAuthenticated) {
+                            // return <Redirect to={{ pathname: "/mails" }} />;
+                            console.log("token authenticated");
+                            return <Component {...props} />;
+                        } else {
+                            console.log("token not authenticated");
+                            return <Redirect to={{ pathname: "/login" }} />;
+                        }
                     }
+
                     // if (!roles.includes(tokenInfo.role.authority)) {
                     //     if (tokenInfo.role.authority === "vendor") return <Redirect to={{ pathname: "/relocation" }} />;
                     //     else return <Redirect to={{ pathname: "/mails" }} />;
