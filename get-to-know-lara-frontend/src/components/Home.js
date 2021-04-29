@@ -33,6 +33,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SendIcon from "@material-ui/icons/Send";
 import CreateIcon from '@material-ui/icons/Create';
 import ComposeMail from "./ComposeMail";
+import EmailDetails from "./EmailDetails";
 
 const drawerWidth = 240;
 
@@ -240,6 +241,8 @@ function Home() {
                     <ProtectedRoute exact path="/mails" component={MailList}/>
                     <ProtectedRoute exact path="/mails/sent" component={SentList}/>
                     <ProtectedRoute exact path="/mails/compose" component={ComposeMail}/>
+                    {/*<ProtectedRoute exact path="/mails/view/{id}" component={ComposeMail}/>*/}
+                    <ProtectedRoute exact path="/mails/view/:id" component={EmailDetails} />
                 </Switch>
             </main>
         </div>

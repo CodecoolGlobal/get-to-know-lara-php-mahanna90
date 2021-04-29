@@ -79,13 +79,19 @@ class MailController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function showEmail($id)
+    public function showEmail(int $id)
     {
-        //
-        return Mail::find($id);
+        $mail = Mail::find($id);
+        $userController = new UserController();
+        $sender = $userController->show($mail->id_user_from);
+        $mail["sender"] = $sender;
+        $target = $userController->show($mail->id_user_to);
+        $mail["target"] = $target;
+
+        return $mail;
     }
 
     public function showByUser(Request $request)

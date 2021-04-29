@@ -33,10 +33,15 @@ const useStyles = makeStyles((theme) => ({
 
 function CustomTableRow({mail, isInboxRow}) {
     const classes = useStyles();
+    const history = useHistory();
+
+    const showEmailDetails = (e) => {
+        history.push(`/mails/view/${mail.id.toString()}`);
+    }
 
     return (
 
-        <TableRow key={mail.id} className={classes.row}>
+        <TableRow key={mail.id} className={classes.row} onClick={showEmailDetails}>
             <TableCell align="center" component="th" scope="row">
                 {mail.is_read ? <IconButton><DraftsIcon fontSize={"default"} color={"primary"}/></IconButton>
                     : <IconButton><MailIcon fontSize={"default"} color={"primary"}/></IconButton>}
