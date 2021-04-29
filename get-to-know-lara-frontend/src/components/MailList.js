@@ -141,12 +141,12 @@ function MailList() {
                         </TableHead>
                         <TableBody>
                             {mails.map((mail) => (
+                                mail.deleted_by_target ? "" :
                                 <CustomTableRow key={mail.id} mail={mail} isInboxRow={true} />
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
-
 
             </Paper>
         </div>

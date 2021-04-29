@@ -41,6 +41,7 @@ function CustomTableRow({mail, isInboxRow}) {
     const classes = useStyles();
     const history = useHistory();
 
+    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState(mail);
 
@@ -71,6 +72,37 @@ function CustomTableRow({mail, isInboxRow}) {
             });
     }
 
+    const deleteMail = (e) => {
+        setLoading(true);
+        // e.preventDefault();
+        axios.put(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/mails/delete/${mail.id.toString()}`, {
+            user: user,
+        },{
+            withCredentials: true,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accepted": "application/json",
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            },
+        })
+            .then((response) => {
+                console.log(response);
+                console.log("email was deleted");
+                setLoading(false);
+                if (isInboxRow) {
+                    history.push("/mails");
+                } else {
+                    history.push("/mails/sent");
+                }
+            })
+            .catch(error => {
+                console.log(error);
+                console.log("couldn't delete email");
+                alert("Cannot delete mail: " + error);
+            });
+    }
+
 
     return (
 
@@ -85,7 +117,7 @@ function CustomTableRow({mail, isInboxRow}) {
                 <p className={classes.messageRow}>{email.message.slice(0, 100)}...</p></TableCell>
             <TableCell align="right" className={classes.rowText} onClick={showEmailDetails}>{email.sent ? email.sent.slice(0, -8) : ""}</TableCell>
             <TableCell align="center">
-                <IconButton><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
+                <IconButton onClick={deleteMail}><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
         </TableRow>
 
     )
