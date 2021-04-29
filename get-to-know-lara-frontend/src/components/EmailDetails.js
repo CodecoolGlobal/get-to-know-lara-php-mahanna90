@@ -85,7 +85,7 @@ function EmailDetails() {
                 <Typography color={"primary"} variant="h4" className={classes.subject}>{email.subject}</Typography>
                 <Typography color={"secondary"} variant="subtitle1" className={classes.from}>From: {email.sender ? email.sender.name : ""} - {email.sender ? email.sender.email : ""}</Typography>
                 <Typography color={"secondary"} variant="subtitle1" className={classes.to}>To: {email.target ? email.target.name : ""} - {email.target ? email.target.email : ""}</Typography>
-                <Typography color={"secondary"} variant="subtitle1" className={classes.sent}>Sent: {email.sent}</Typography>
+                <Typography color={"secondary"} variant="subtitle1" className={classes.sent}>Sent: {email.sent ? email.sent.slice(0, -8) : ""}</Typography>
                 <Typography color={"primary"} variant="h6" className={classes.message}>{email.message}</Typography>
 
             </Paper>

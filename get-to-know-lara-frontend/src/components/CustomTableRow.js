@@ -50,7 +50,7 @@ function CustomTableRow({mail, isInboxRow}) {
             <TableCell align="left" className={classes.rowText}>
                 <p className={classes.subjectRow}>{mail.subject}</p>
                 <p className={classes.messageRow}>{mail.message.slice(0, 100)}...</p></TableCell>
-            <TableCell align="right" className={classes.rowText}>{mail.sent}</TableCell>
+            <TableCell align="right" className={classes.rowText}>{mail.sent ? mail.sent.slice(0, -8) : ""}</TableCell>
             <TableCell align="center">
                 <IconButton><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
         </TableRow>
