@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -128,7 +129,27 @@ class UserController extends Controller
     }
 
     public function validateToken(Request $request) {
-        return $request->user();
+        $userIdToValidate = $request->user()->id;
+        $sessionUserId = $this->getCurrentUser()->tokenable_id;
+
+        if ($sessionUserId === $userIdToValidate) {
+            $response = [
+                'isAuthenticated' => true,
+                'message' => "User token matches!",
+            ];
+            return response($response, Response::HTTP_ACCEPTED);
+        }
+        $response = [
+            'isAuthenticated' => false,
+            'message' => "User token doesn't match!",
+        ];
+        return response($response, Response::HTTP_UNAUTHORIZED);
+//        return $request->user();
+    }
+
+
+    public function getCurrentUser() {
+        return DB::table('personal_access_tokens')->latest()->first();
     }
 
 
