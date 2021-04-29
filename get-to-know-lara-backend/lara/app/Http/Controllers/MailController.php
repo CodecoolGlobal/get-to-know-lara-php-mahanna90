@@ -67,7 +67,7 @@ class MailController extends Controller
         }
 
         $mail["id_user_from"] = $request->get("id_user_from");
-        $mail["id_user_to"] = $targetUser->pull('id');
+        $mail["id_user_to"] = $targetUser->id;
         $mail["subject"] = $request->get("subject");
         $mail["message"] = $request->get("message");
         $mail["is_read"] = false;
@@ -98,10 +98,6 @@ class MailController extends Controller
         }
 
         return $sentMails;
-//        $user = User::find($id);
-//        $mails = $user->mails()->orderBy('sent', 'DESC')->get();
-////        dd($mails);
-//        return $mails;
     }
 
     /**

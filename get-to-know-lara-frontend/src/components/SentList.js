@@ -23,7 +23,12 @@ const useStyles = makeStyles((theme) => ({
         padding: '30px',
         display: 'flex',
         flexDirection: 'column',
-        // alignItems: 'center',
+        // maxWidth: '80%',
+        width: '80%',
+    },
+    container: {
+        display: 'flex',
+        justifyContent: 'center',
     },
     title: {
         margin: '10px',
@@ -121,7 +126,7 @@ function SentList() {
 
 
     return (
-        <>
+        <div className={classes.container}>
             <Paper elevation={3} className={classes.paper}>
                 <Typography color={"primary"} variant="h4" id="tableTitle" component="div" className={classes.title}>
                     Sent emails
@@ -147,7 +152,7 @@ function SentList() {
                                     <TableCell align="left" className={classes.rowText}>{mail.target ? mail.target.name : ""}</TableCell>
                                     <TableCell align="left" className={classes.rowText}>
                                         <p className={classes.subjectRow}>{mail.subject}</p>
-                                        <p className={classes.messageRow}>{mail.message}</p></TableCell>
+                                        <p className={classes.messageRow}>{mail.message.slice(0, 100)}...</p></TableCell>
                                     <TableCell align="right" className={classes.rowText}>{mail.sent}</TableCell>
                                     <TableCell align="center">
                                         <IconButton><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
@@ -159,7 +164,7 @@ function SentList() {
 
 
             </Paper>
-        </>
+        </div>
     );
 }
 

@@ -100,7 +100,7 @@ class UserController extends Controller
 
 
     public function findByEmail($email) {
-        return User::where('email', $email)->get('id');
+        return User::where('email', $email)->get()->first();
     }
 
     /**
