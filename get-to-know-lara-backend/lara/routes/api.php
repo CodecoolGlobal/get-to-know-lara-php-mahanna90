@@ -34,12 +34,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/validate-token', [UserController::class, 'validateToken']);
     Route::get('/mails', [MailController::class, 'index']);
     Route::get('/mails/inbox', [MailController::class, 'inbox']);
-//    Route::put('/mails', [MailController::class, 'update']);
-    Route::delete('/mails', [MailController::class, 'destroy']);
+//    Route::delete('/mails', [MailController::class, 'destroy']);
     Route::get('/mails/sent', [MailController::class, 'showByUser']);
     Route::post('/mails/compose', [MailController::class, 'store']);
     Route::get('/mails/view/{id}', [MailController::class, 'showEmail']);
     Route::put('/mails/mark-as-unread/{id}', [MailController::class, 'update']);
+    Route::put('/mails/delete/{id}', [MailController::class, 'destroy']);
     Route::post('/logout', [UserController::class, 'logout']);
 });
 

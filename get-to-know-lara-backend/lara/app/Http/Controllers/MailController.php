@@ -21,6 +21,10 @@ class MailController extends Controller
         return Mail::all()->sortByDesc("sent");
     }
 
+    /**
+     * @param Request $request
+     * @return Mail[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function inbox(Request $request)
     {
         $mails = Mail::where('id_user_to', $request->get('id'))->orderBy('sent', 'DESC')->get();
@@ -95,6 +99,10 @@ class MailController extends Controller
         return $mail;
     }
 
+    /**
+     * @param Request $request
+     * @return Mail[]|\Illuminate\Database\Eloquent\Collection
+     */
     public function showByUser(Request $request)
     {
         $sentMails = Mail::where('id_user_from', $request->get('id'))->orderBy('sent', 'DESC')->get();
@@ -133,15 +141,43 @@ class MailController extends Controller
         return $updatedMail;
     }
 
+    public function checkIfUserIsSender($user, $mailId) {
+        $mailToDelete = Mail::where('id', $mailId)->get()->first();
+
+        return $user->id === $mailToDelete->id_user_from;
+    }
+
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $mailId)
     {
-        //
-        return Mail::destroy($id);
+        $user = $request->user();
+        $isSender = $this->checkIfUserIsSender($user, $mailId);
+
+        if ($isSender) {
+            $updated = Mail::where('id', $mailId)->update(['deleted_by_sender' => 1]);
+        } else {
+            $updated = Mail::where('id', $mailId)->update(['deleted_by_target' => 1]);
+        }
+
+        if ($updated) {
+            $response = [
+                'deleted' => true,
+                'message' => "Email was deleted by " . ($isSender ? "sender" : "target"),
+            ];
+            return response($response, Response::HTTP_ACCEPTED);
+        }
+        $response = [
+            'deleted' => false,
+            'message' => "Email could not be deleted!",
+        ];
+        return response($response, Response::HTTP_CONFLICT);
     }
+
+
 }
