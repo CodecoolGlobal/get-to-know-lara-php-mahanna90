@@ -82,8 +82,9 @@ class MailController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function showEmail(int $id)
+    public function showEmail($id)
     {
+        Mail::where('id', $id)->update(['is_read' => 1]);
         $mail = Mail::find($id);
         $userController = new UserController();
         $sender = $userController->show($mail->id_user_from);
@@ -113,15 +114,23 @@ class MailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update($id)
     {
-        //
-        Mail::where('id', $request->get('id'))->update([
-            'is_read' => $request->get('is_read')
+        $currentStatus = Mail::find($id);
+        Mail::where('id', $id)->update([
+            'is_read' => !$currentStatus->is_read
         ]);
 //        $mail = Mail::find($request->get('id'));
 //        $mail->update($request->get('is_read'));
-        return Mail::find($request->get('id'));
+        $updatedMail = Mail::find($id);
+
+        $userController = new UserController();
+        $sender = $userController->show($updatedMail->id_user_from);
+        $updatedMail["sender"] = $sender;
+        $target = $userController->show($updatedMail->id_user_to);
+        $updatedMail["target"] = $target;
+
+        return $updatedMail;
     }
 
     /**
