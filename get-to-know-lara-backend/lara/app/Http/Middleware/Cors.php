@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class Cors
 {
@@ -25,7 +26,11 @@ class Cors
 
         if ($request->getMethod() == "OPTIONS"){
             //The client-side application can set only headers allowed in Access-Control-Allow-Headers
-            return response()->json('OK',200,$headers);
+            $response = [
+                'success' => true,
+                'message' => 'Connection request OK.'
+            ];
+            return response($response, Response::HTTP_OK, $headers);
         }
         $response = $next($request);
         foreach ($headers as $key => $value) {
