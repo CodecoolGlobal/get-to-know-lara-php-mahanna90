@@ -21,9 +21,7 @@ use App\Http\Controllers\MailController;
 
 Route::get('/user-test', function () {
     $users = User::all();
-
     dd($users);
-//    return response($users, 200);
 });
 
 Route::post('/register', [UserController::class, 'register']);
@@ -34,7 +32,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('/validate-token', [UserController::class, 'validateToken']);
     Route::get('/mails', [MailController::class, 'index']);
     Route::get('/mails/inbox', [MailController::class, 'inbox']);
-//    Route::delete('/mails', [MailController::class, 'destroy']);
     Route::get('/mails/sent', [MailController::class, 'showByUser']);
     Route::post('/mails/compose', [MailController::class, 'store']);
     Route::get('/mails/view/{id}', [MailController::class, 'showEmail']);
@@ -43,5 +40,4 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('/logout', [UserController::class, 'logout']);
 });
 
-//Route::resource('mails', MailController::class);
 

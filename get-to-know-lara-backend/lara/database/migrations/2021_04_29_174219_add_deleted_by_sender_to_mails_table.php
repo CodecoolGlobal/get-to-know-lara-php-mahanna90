@@ -14,8 +14,8 @@ class AddDeletedBySenderToMailsTable extends Migration
     public function up()
     {
         Schema::table('mails', function (Blueprint $table) {
-            $table->boolean('deleted_by_sender')->default(0)->change();
-            $table->boolean('deleted_by_target')->default(0)->change();
+            $table->boolean('deleted_by_sender')->default(0);
+            $table->boolean('deleted_by_target')->default(0);
         });
     }
 

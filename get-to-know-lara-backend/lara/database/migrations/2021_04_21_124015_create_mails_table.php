@@ -24,8 +24,8 @@ class CreateMailsTable extends Migration
 
             $table->string('subject');
             $table->text('message');
-            $table->boolean('is_read')->default(0)->change();
-            $table->timestamp('sent')->nullable();
+            $table->boolean('is_read')->default(0);
+            $table->timestamp('sent')->default(\Illuminate\Support\Facades\DB::raw("CURRENT_TIMESTAMP") )->nullable();
 
             $table->timestamps();
         });

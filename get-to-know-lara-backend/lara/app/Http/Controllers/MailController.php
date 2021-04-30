@@ -4,46 +4,50 @@ namespace App\Http\Controllers;
 
 use App\Models\Mail;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use function Illuminate\Events\queueable;
 
 class MailController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display all emails.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): Response
     {
-        // get all emails
-        return Mail::all()->sortByDesc("sent");
+        $allMails = Mail::all()->sortByDesc("sent");
+
+        return response($allMails, Response::HTTP_OK);
     }
 
     /**
-     * @param Request $request
-     * @return Mail[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public function inbox(Request $request)
-    {
-        $mails = Mail::where('id_user_to', $request->get('id'))->orderBy('sent', 'DESC')->get();
-        foreach($mails as $mail) {
-            $userController = new UserController();
-//            $sender = User::find($mail->id_user_from);
-            $sender = $userController->show($mail->id_user_from);
-            $mail["sender"] = $sender;
-        }
-        return $mails;
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Show emails received by the request user.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function inbox(Request $request): Response
+    {
+        $user = $request->user();
+        $user->load("mailsReceived");
+        $mailsReceived = $user->mailsReceived()->orderBy('sent', 'DESC')->get()->all();
+        foreach($mailsReceived as $mail) {
+            $sender = $mail->userFrom()->first();
+            $mail["sender"] = $sender;
+        }
+
+        return response($mailsReceived,Response::HTTP_OK);
+    }
+
+    /**
+     * Store a newly created email in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request): Response
     {
         try{
             $request->validate([
@@ -52,7 +56,7 @@ class MailController extends Controller
                 'message' => 'required',
                 'id_user_from' => 'required']);
         }
-        catch (\Exception $exception){
+        catch (Exception $exception){
             $response = [
                 'success' => false,
                 'message' => 'Error during email sending: ' . $exception->getMessage()
@@ -60,8 +64,7 @@ class MailController extends Controller
             return response($response, Response::HTTP_BAD_REQUEST);
         }
 
-        $userController = new UserController();
-        $targetUser = $userController->findByEmail($request->get('email'));
+        $targetUser = User::findByEmail($request->get('email'));
         if (!$targetUser) {
             $response = [
                 'success' => false,
@@ -69,81 +72,83 @@ class MailController extends Controller
             ];
             return response($response, Response::HTTP_NOT_FOUND);
         }
-
         $mail["id_user_from"] = $request->get("id_user_from");
         $mail["id_user_to"] = $targetUser->id;
         $mail["subject"] = $request->get("subject");
         $mail["message"] = $request->get("message");
-        $mail["is_read"] = false;
-        $mail["sent"] = NOW();
-        $mail["deleted_by_sender"] = false;
-        $mail["deleted_by_target"] = false;
+        $response = Mail::create($mail);
 
-        return Mail::create($mail);
+        return response($response, Response::HTTP_CREATED);
     }
 
     /**
-     * Display the specified resource.
+     * Display the details of a specified email.
      *
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function showEmail($id)
+    public function showEmail(int $id): Response
     {
         Mail::where('id', $id)->update(['is_read' => 1]);
         $mail = Mail::find($id);
-        $userController = new UserController();
-        $sender = $userController->show($mail->id_user_from);
+        $sender = $mail->userFrom()->first();
+        $target = $mail->userTo()->first();
         $mail["sender"] = $sender;
-        $target = $userController->show($mail->id_user_to);
         $mail["target"] = $target;
 
-        return $mail;
+        return response($mail, Response::HTTP_OK);
     }
 
     /**
+     * Show emails sent by the request user.
+     *
      * @param Request $request
-     * @return Mail[]|\Illuminate\Database\Eloquent\Collection
+     * @return \Illuminate\Http\Response
      */
-    public function showByUser(Request $request)
+    public function showByUser(Request $request): Response
     {
-        $sentMails = Mail::where('id_user_from', $request->get('id'))->orderBy('sent', 'DESC')->get();
-
+        $user = $request->user();
+        $user->load("mailsSent");
+        $sentMails = $user->mailsSent()->orderBy('sent', 'DESC')->get()->all();
         foreach($sentMails as $mail) {
-            $target = User::find($mail->id_user_to);
+            $target = $mail->userTo()->first();
             $mail["target"] = $target;
         }
 
-        return $sentMails;
+        return response($sentMails, Response::HTTP_OK);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update($id)
+    public function update(int $id): Response
     {
         $currentStatus = Mail::find($id);
         Mail::where('id', $id)->update([
             'is_read' => !$currentStatus->is_read
         ]);
-//        $mail = Mail::find($request->get('id'));
-//        $mail->update($request->get('is_read'));
         $updatedMail = Mail::find($id);
-
-        $userController = new UserController();
-        $sender = $userController->show($updatedMail->id_user_from);
+        $sender = $updatedMail->userFrom()->first();
+        $target = $updatedMail->userTo()->first();
         $updatedMail["sender"] = $sender;
-        $target = $userController->show($updatedMail->id_user_to);
         $updatedMail["target"] = $target;
 
-        return $updatedMail;
+        return response($updatedMail, Response::HTTP_ACCEPTED);
     }
 
-    public function checkIfUserIsSender($user, $mailId) {
+
+    /**
+     * Checks if user is the sender of the current email.
+     *
+     * @param $user
+     * @param $mailId
+     * @return bool
+     */
+    public function checkIfUserIsSender($user, $mailId): bool
+    {
         $mailToDelete = Mail::where('id', $mailId)->get()->first();
 
         return $user->id === $mailToDelete->id_user_from;
@@ -151,12 +156,13 @@ class MailController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * Mark the specified resource in storage as deleted.
      *
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param $mailId
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $mailId)
+    public function destroy(Request $request, $mailId): Response
     {
         $user = $request->user();
         $isSender = $this->checkIfUserIsSender($user, $mailId);
