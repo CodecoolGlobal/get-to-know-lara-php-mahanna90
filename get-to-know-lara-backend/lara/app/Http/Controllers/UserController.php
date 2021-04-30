@@ -68,7 +68,7 @@ class UserController extends Controller
                 'success' => false,
                 'message' => 'Registration error, input validation failed: missing or not correctly formatted data.'
             ];
-            return response($response, Response::HTTP_BAD_REQUEST);
+            return response($response, Response::HTTP_NOT_ACCEPTABLE);
         }
         User::firstOrCreate([
             "name" => $request->get('name'),

@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios from 'axios';
-import Spinner from "react-spinner-material";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     Avatar,
@@ -51,8 +50,6 @@ function Login() {
     const classes = useStyles();
     const history = useHistory();
 
-    const load = {position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)"};
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
@@ -99,19 +96,6 @@ function Login() {
                 // alert("Invalid credentials: " + error);
             });
     };
-
-    // if (loading)
-    //     return (
-    //         <div style={load}>
-    //             <Spinner
-    //                 size={120}
-    //                 spinnerColor={"#333"}
-    //                 spinnerWidth={2}
-    //                 visible={true}
-    //                 color={'black'}/>
-    //         </div>
-    //     );
-
 
     return (
         <Container component="main" maxWidth="xs">

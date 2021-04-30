@@ -54,10 +54,12 @@ function Register() {
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
-        debugger
-        if ( message === MESSAGES.REG_SUCCESS_MSG) {
+        if ( message === MESSAGES.REG_SUCCESS_MSG && !inputError) {
             setLoading(false);
             history.push("/login");
+        } else if (message === MESSAGES.REG_ERROR_MSG) {
+            console.log("Error occurred during registration");
+            history.push("/register");
         }
         // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.REG_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
         //     setLoading(false);
@@ -89,8 +91,9 @@ function Register() {
                     setMessage(MESSAGES.REG_SUCCESS_MSG);
                 })
                 .catch(function (error) {
-                    setInputError(true);
+                    console.log("Couldn't validate data on the backend: " + error)
                     setMessage(MESSAGES.REG_ERROR_MSG);
+                    setInputError(true);
                     // alert("Invalid credentials: " + error);
                 });
         }
