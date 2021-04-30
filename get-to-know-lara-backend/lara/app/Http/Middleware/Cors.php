@@ -26,11 +26,7 @@ class Cors
 
         if ($request->getMethod() == "OPTIONS"){
             //The client-side application can set only headers allowed in Access-Control-Allow-Headers
-            $response = [
-                'success' => true,
-                'message' => 'Connection request OK.'
-            ];
-            return response($response, Response::HTTP_OK, $headers);
+            return response()->json('OK',200,$headers);
         }
         $response = $next($request);
         foreach ($headers as $key => $value) {
