@@ -27,12 +27,19 @@ class Mail extends Model
     ];
 
     protected $casts = [
-        'sent' => 'datetime',
         'is_read' => 'boolean',
     ];
 
-//    public function users()
-//    {
-//        return $this->hasOne(User::class, 'id_user_from', 'mail_id');
-//    }
+    public function userFrom()
+    {
+        return $this->hasOne(User::class, 'id', 'id_user_from');
+    }
+
+    public function userTo()
+    {
+        return $this->hasOne(User::class, 'id', 'id_user_to');
+    }
+
+
+
 }
