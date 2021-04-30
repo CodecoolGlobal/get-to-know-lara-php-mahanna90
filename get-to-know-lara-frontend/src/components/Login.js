@@ -60,10 +60,14 @@ function Login() {
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
-        if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
+        if (message === MESSAGES.LOGIN_SUCCESS_MSG) {
             setLoading(false);
             history.push("/mails");
         }
+        // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
+        //     setLoading(false);
+        //     history.push("/mails");
+        // }
     }, [message])
 
 

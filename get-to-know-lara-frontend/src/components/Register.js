@@ -54,10 +54,14 @@ function Register() {
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
-        if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.REG_ERROR_MSG) {
+        if ( message === MESSAGES.REG_SUCCESS_MSG) {
             setLoading(false);
             history.push("/login");
         }
+        // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.REG_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
+        //     setLoading(false);
+        //     history.push("/login");
+        // }
     }, [message])
 
     const submit = (e) => {
