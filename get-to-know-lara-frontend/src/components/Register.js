@@ -54,6 +54,7 @@ function Register() {
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
+        debugger
         if ( message === MESSAGES.REG_SUCCESS_MSG) {
             setLoading(false);
             history.push("/login");

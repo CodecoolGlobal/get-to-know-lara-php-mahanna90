@@ -115,7 +115,7 @@ function CustomTableRow({mail, isInboxRow}) {
             <TableCell align="left" className={classes.rowText} onClick={showEmailDetails}>
                 <p className={classes.subjectRow}>{email.subject}</p>
                 <p className={classes.messageRow}>{email.message.slice(0, 100)}...</p></TableCell>
-            <TableCell align="right" className={classes.rowText} onClick={showEmailDetails}>{email.sent ? email.sent.slice(0, -8) : ""}</TableCell>
+            <TableCell align="right" className={classes.rowText} onClick={showEmailDetails}>{email.sent ? email.sent : ""}</TableCell>
             <TableCell align="center">
                 <IconButton onClick={deleteMail}><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
         </TableRow>
