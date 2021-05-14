@@ -22,10 +22,24 @@ class Mail extends Model
         'message',
         'is_read',
         'sent',
+        'deleted_by_sender',
+        'deleted_by_target',
     ];
 
     protected $casts = [
-        'sent' => 'datetime',
         'is_read' => 'boolean',
     ];
+
+    public function userFrom()
+    {
+        return $this->hasOne(User::class, 'id', 'id_user_from');
+    }
+
+    public function userTo()
+    {
+        return $this->hasOne(User::class, 'id', 'id_user_to');
+    }
+
+
+
 }

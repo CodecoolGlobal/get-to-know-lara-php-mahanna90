@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios from 'axios';
-import Spinner from "react-spinner-material";
 import {makeStyles} from "@material-ui/core/styles";
 import {
     Avatar,
@@ -51,12 +50,22 @@ function Login() {
     const classes = useStyles();
     const history = useHistory();
 
-    const load = {position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)"};
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [inputError, setInputError] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
+
+    useEffect(() => {
+        if (message === MESSAGES.LOGIN_SUCCESS_MSG) {
+            setLoading(false);
+            history.push("/mails");
+        }
+        // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
+        //     setLoading(false);
+        //     history.push("/mails");
+        // }
+    }, [message])
 
 
     const submit = (e) => {
@@ -76,27 +85,17 @@ function Login() {
             .then((response) => {
                 sessionStorage.setItem("user", JSON.stringify(response.data.user));
                 sessionStorage.setItem("token", response.data.token);
-                setLoading(false);
+                setInputError(false);
                 setMessage(MESSAGES.LOGIN_SUCCESS_MSG);
-                history.push("/mails");
+
             })
-            .catch(function (error) {
-                alert("Invalid credentials: " + error);
+            .catch(error => {
+                console.log(error);
+                setMessage(MESSAGES.LOGIN_ERROR_MSG);
+                setInputError(true);
+                // alert("Invalid credentials: " + error);
             });
     };
-
-    // if (loading)
-    //     return (
-    //         <div style={load}>
-    //             <Spinner
-    //                 size={120}
-    //                 spinnerColor={"#333"}
-    //                 spinnerWidth={2}
-    //                 visible={true}
-    //                 color={'black'}/>
-    //         </div>
-    //     );
-
 
     return (
         <Container component="main" maxWidth="xs">
@@ -108,16 +107,21 @@ function Login() {
                 <Typography component="h1" variant="h5">
                     Sign in
                 </Typography>
-                {message === MESSAGES.DEFAULT_MSG?
+                {message === MESSAGES.DEFAULT_MSG ||  message === MESSAGES.LOGIN_WARNING_MSG ?
                     <Alert severity="warning" className={classes.alert}>
                         <AlertTitle>Warning</AlertTitle>
                         <strong>{MESSAGES.LOGIN_WARNING_MSG}</strong>
                     </Alert>
-                    :
-                    <Alert severity="success" className={classes.alert}>
-                        <AlertTitle>Success</AlertTitle>
-                        <strong>{MESSAGES.REG_SUCCESS_MSG}</strong>
-                    </Alert>
+                    : message === MESSAGES.LOGIN_ERROR_MSG ?
+                        <Alert severity="error" className={classes.alert}>
+                            <AlertTitle>Error</AlertTitle>
+                            <strong>{MESSAGES.LOGIN_ERROR_MSG}</strong>
+                        </Alert>
+                        :
+                            <Alert severity="success" className={classes.alert}>
+                                <AlertTitle>Success</AlertTitle>
+                                <strong>{MESSAGES.REG_SUCCESS_MSG}</strong>
+                            </Alert>
                 }
                 <form className={classes.form} onSubmit={submit}>
                     <TextField
@@ -130,7 +134,12 @@ function Login() {
                         name="email"
                         autoComplete="email"
                         autoFocus
-                        onChange={(e) => setEmail(e.target.value)}
+                        error={inputError === true}
+                        helperText={inputError === true ? 'Incorrect entry' : ' '}
+                        onChange={(e) => {
+                            setEmail(e.target.value);
+                            setInputError(false);
+                        }}
                     />
                     <TextField
                         variant="outlined"
@@ -142,7 +151,12 @@ function Login() {
                         type="password"
                         id="password"
                         autoComplete="current-password"
-                        onChange={(e) => setPassword(e.target.value)}
+                        error={inputError === true}
+                        helperText={inputError === true ? 'Incorrect entry' : ' '}
+                        onChange={(e) => {
+                            setPassword(e.target.value);
+                            setInputError(false);
+                        }}
                     />
                     {/*<FormControlLabel*/}
                     {/*    control={<Checkbox value="remember" color="primary" />}*/}

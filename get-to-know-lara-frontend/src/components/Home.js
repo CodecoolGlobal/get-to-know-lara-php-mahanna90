@@ -18,6 +18,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import MailList from "./MailList";
+import SentList from "./SentList";
 import Login from "./Login";
 import Button from "@material-ui/core/Button";
 import {Route, Redirect, Switch} from 'react-router-dom';
@@ -28,7 +29,11 @@ import axios from "axios";
 import {BASE_URL, MESSAGES} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
 import { useHistory } from "react-router-dom";
-
+import DeleteIcon from "@material-ui/icons/Delete";
+import SendIcon from "@material-ui/icons/Send";
+import CreateIcon from '@material-ui/icons/Create';
+import ComposeMail from "./ComposeMail";
+import EmailDetails from "./EmailDetails";
 
 const drawerWidth = 240;
 
@@ -122,6 +127,13 @@ function Home() {
         setOpen(false);
     };
 
+    useEffect(() => {
+        if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && MESSAGES.LOGIN_SUCCESS_MSG) {
+            setLoading(false);
+            history.push("/");
+        }
+    }, [message])
+
     function logOut(e) {
         setLoading(true);
         e.preventDefault();
@@ -134,14 +146,39 @@ function Home() {
             },
         })
             .then((response) => {
+                console.log("successfully logged out")
                 sessionStorage.clear();
-                setLoading(false);
-                setMessage(MESSAGES.DEFAULT_MSG);
-                history.push("/");
+                setMessage(MESSAGES.LOGIN_WARNING_MSG);
+
             })
             .catch(function (error) {
+                console.log("failed to log out")
                 alert("Logout error");
             });
+    }
+
+    const goToMails = (e) => {
+        if (sessionStorage.getItem('token')) {
+            history.push("/mails")
+        } else {
+            history.push("/login")
+        }
+    }
+
+    const goToSent = (e) => {
+        if (sessionStorage.getItem('token')) {
+            history.push("/mails/sent")
+        } else {
+            history.push("/login")
+        }
+    }
+
+    const goToCompose = (e) => {
+        if (sessionStorage.getItem('token')) {
+            history.push("/mails/compose")
+        } else {
+            history.push("/login")
+        }
     }
 
     return (
@@ -205,31 +242,39 @@ function Home() {
                 </div>
                 <Divider/>
                 <List>
-                    {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItem>
-                    ))}
+                    <ListItem button key={"Inbox"} onClick={goToMails}>
+                        <ListItemIcon><MailIcon /></ListItemIcon>
+                        <ListItemText primary={"Inbox"}/>
+                    </ListItem>
+                    <ListItem button key={"Compose"} onClick={goToCompose}>
+                        <ListItemIcon><CreateIcon /></ListItemIcon>
+                        <ListItemText primary={"Compose"}/>
+                    </ListItem>
+                    <ListItem button key={"Sent"} onClick={goToSent}>
+                        <ListItemIcon><SendIcon /></ListItemIcon>
+                        <ListItemText primary={"Sent"}/>
+                    </ListItem>
                 </List>
                 <Divider/>
                 <List>
-                    {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                        <ListItem button key={text}>
-                            <ListItemIcon>{index % 2 === 0 ? <InboxIcon/> : <MailIcon/>}</ListItemIcon>
-                            <ListItemText primary={text}/>
-                        </ListItem>
-                    ))}
+                    <ListItem button key={"Trash"}>
+                        <ListItemIcon><DeleteIcon/></ListItemIcon>
+                        <ListItemText primary={"Trash"}/>
+                    </ListItem>
                 </List>
             </Drawer>
             <main className={classes.content}>
                 <Switch>
                     <Route exact path="/">
-                        {sessionStorage.getItem('token') ?  <Redirect to="/mails" /> : <Redirect to="/login"/>}
+                        { !sessionStorage.getItem('token') ?  <Redirect to="/login"/> : <Redirect to="/mails" /> }
                     </Route>
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/login" component={Login}/>
                     <ProtectedRoute exact path="/mails" component={MailList}/>
+                    <ProtectedRoute exact path="/mails/sent" component={SentList}/>
+                    <ProtectedRoute exact path="/mails/compose" component={ComposeMail}/>
+                    {/*<ProtectedRoute exact path="/mails/view/{id}" component={ComposeMail}/>*/}
+                    <ProtectedRoute exact path="/mails/view/:id" component={EmailDetails} />
                 </Switch>
             </main>
         </div>

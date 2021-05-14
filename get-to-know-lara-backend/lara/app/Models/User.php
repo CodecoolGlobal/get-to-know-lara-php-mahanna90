@@ -48,4 +48,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public static function findByEmail($email) {
+        return self::where('email', $email)->get()->first();
+    }
+
+    public function mailsSent()
+    {
+        return $this->hasMany(Mail::class, 'id_user_from');
+    }
+
+    public function mailsReceived()
+    {
+        return $this->hasMany(Mail::class, 'id_user_to');
+    }
 }

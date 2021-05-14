@@ -4,8 +4,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
@@ -15,6 +13,7 @@ import Container from '@material-ui/core/Container';
 import {BASE_URL, MESSAGES} from "../Constants";
 import {MessageContext} from "../contexts/MessageContext";
 import { useHistory } from "react-router-dom";
+import {Alert, AlertTitle} from "@material-ui/lab";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -35,6 +34,11 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    alert: {
+        marginTop: '10px',
+        marginBottom: '10px',
+        width: '100%',
+    },
 }));
 
 function Register() {
@@ -46,26 +50,33 @@ function Register() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [inputError, setInputError] = useState(false);
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
-        if (message !== MESSAGES.DEFAULT_MSG) {
+        if ( message === MESSAGES.REG_SUCCESS_MSG && !inputError) {
             setLoading(false);
             history.push("/login");
+        } else if (message === MESSAGES.REG_ERROR_MSG) {
+            console.log("Error occurred during registration");
+            history.push("/register");
         }
+        // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.REG_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
+        //     setLoading(false);
+        //     history.push("/login");
+        // }
     }, [message])
 
     const submit = (e) => {
-        if (password !== confirmPassword) {
-            alert("Passwords do not match");
-            history.push("/register");
-        }
         setLoading(true);
         e.preventDefault();
-        axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/register`, {
-            name,
-            email,
-            password,
+        if (password !== confirmPassword) {
+            alert("Passwords do not match");
+        } else {
+            axios.post(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/register`, {
+                name,
+                email,
+                password,
             }, {
                 withCredentials: true,
                 mode: "cors",
@@ -74,13 +85,18 @@ function Register() {
                     "Accepted": "application/json",
                 },
             })
-            .then((response) => {
-                console.log(response.data.message);
-                setMessage(prevMessage => response.data.message);
-            })
-            .catch(function (error) {
-                alert("Invalid credentials: " + error);
-            });
+                .then((response) => {
+                    console.log(response.data.message);
+                    setInputError(false);
+                    setMessage(MESSAGES.REG_SUCCESS_MSG);
+                })
+                .catch(function (error) {
+                    console.log("Couldn't validate data on the backend: " + error)
+                    setMessage(MESSAGES.REG_ERROR_MSG);
+                    setInputError(true);
+                    // alert("Invalid credentials: " + error);
+                });
+        }
     };
 
     return (
@@ -93,6 +109,11 @@ function Register() {
                 <Typography component="h1" variant="h5">
                     Sign up
                 </Typography>
+                {message === MESSAGES.REG_ERROR_MSG ?
+                <Alert severity="error" className={classes.alert}>
+                    <AlertTitle>Error</AlertTitle>
+                    <strong>{MESSAGES.REG_ERROR_MSG}</strong>
+                </Alert> : "" }
                 <form className={classes.form} onSubmit={submit}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
@@ -104,7 +125,12 @@ function Register() {
                                 label="Name"
                                 name="name"
                                 autoComplete="name"
-                                onChange={(e) => setName(e.target.value)}
+                                error={inputError === true}
+                                helperText={inputError === true ? 'Incorrect entry' : ' '}
+                                onChange={(e) => {
+                                    setName(e.target.value);
+                                    setInputError(false);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -116,7 +142,12 @@ function Register() {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
-                                onChange={(e) => setEmail(e.target.value)}
+                                error={inputError === true}
+                                helperText={inputError === true ? 'Incorrect entry' : ' '}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    setInputError(false);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -129,7 +160,12 @@ function Register() {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
-                                onChange={(e) => setPassword(e.target.value)}
+                                error={inputError === true}
+                                helperText={inputError === true ? 'Incorrect entry' : ' '}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    setInputError(false);
+                                }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -141,7 +177,12 @@ function Register() {
                                 label="Confirm password"
                                 type="password"
                                 id="password"
-                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                error={inputError === true}
+                                helperText={inputError === true ? 'Incorrect entry' : ' '}
+                                onChange={(e) => {
+                                    setConfirmPassword(e.target.value);
+                                    setInputError(false);
+                                }}
                             />
                         </Grid>
                     </Grid>
