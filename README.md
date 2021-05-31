@@ -5,6 +5,7 @@
 
 Get to know Lara is a solo project with the aim to get to know the Laravel framework.
 The project contains a Laravel backend API and a React frontend in separated directories.
+As for its functionality, this is a simple mail application, which makes it possible to send and receive emails between registered users.
 
 ![home](get-to-know-lara-backend/lara/resources/images/login.png)
 
