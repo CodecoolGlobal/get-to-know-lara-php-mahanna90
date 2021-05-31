@@ -1,5 +1,84 @@
 # Get to know Lara
 
+
+## 1. About the project
+
+Get to know Lara is a solo project with the aim to get to know the Laravel framework.
+The project contains a Laravel backend API and a React frontend in separated directories.
+
+![home](get-to-know-lara-backend/lara/resources/images/login.png)
+
+### 1.1 Main features
+1. Login / registration
+2. Checking inbox
+3. Checking sent emails
+4. Writing and sending new email
+5. Deleting email
+6. Checking details of one email
+7. Mark read/unread email
+
+### 1.2 Backend API endpoints
+ #### 1.2.1 Login (/login):
+- validates input data, if invalid input, sends bad request status and message
+- if user input is valid, checks credentials with hashed password
+- if credentials are also valid, generates and returns a bearer token for the user
+ 
+  ![home](get-to-know-lara-backend/lara/resources/images/login_error.png)
+
+#### 1.2.2 Register (/register):
+- validates input data, if invalid input, sends bad request status and message
+- if user input is valid, creates the user in the DB and returns a registrations successful message
+  ![home](get-to-know-lara-backend/lara/resources/images/register.png)
+
+#### 1.2.3 Inbox (/mails/inbox):
+- endpoint is authenticated with sanctum, and with protected route on react frontend side
+- returns the emails sent to the current user from the DB in descending order by sending time
+  ![home](get-to-know-lara-backend/lara/resources/images/inbox.png)
+
+#### 1.2.4 Sent (/mails/sent):
+- endpoint is authenticated with sanctum, and with protected route on react frontend side
+- returns the emails sent from the current user from the DB in descending order by sending time
+
+#### 1.2.5 Write email (/mails/compose):
+- endpoint is authenticated with sanctum, and with protected route on react frontend side
+- validates input data, if invalid input, sends bad request status and message
+- if input is valid, creates and stores email in DB, returns the created Mail object and *created* as status
+  ![home](get-to-know-lara-backend/lara/resources/images/compose.png)
+
+#### 1.2.6 Delete email (/mails/delete/{id}):
+- endpoint is authenticated with sanctum, and with protected route on react frontend side
+- checks if user is sender or receiver of the email
+- only deletes it on the requested side
+- soft deletes only, can be restored if needed
+- returns message with http status code for success or failure
+
+#### 1.2.7 Check email details (/mails/view/{id}):
+- endpoint is authenticated with sanctum, and with protected route on react frontend side
+- returns Mail object with sender and receiver details and status code
+  ![home](get-to-know-lara-backend/lara/resources/images/mail_details.png)
+
+#### 1.2.8 Mark email as read / unread (/mails/mark-as-unread/{id}):
+- endpoint is authenticated with sanctum, and with protected route on react frontend side
+- updates the selected email status in the DB
+- returns the updated Mail object with http status code
+
+#### 1.2.9 Others:
+- **/validate-token**: used by the frontend to validate protected routes
+- **/logout**: used to delete session data from the backend during logout
+- **/user/{id}**: returns requested user for testing purposes
+- **/mails**: returns all emails form the DB for testing purposes
+- **/trash**: not implemented yet, will be used to check deleted emails
+
+### 1.3 Frontend features
+- uses Material UI components for design elements
+- uses protected routes with bearer token
+- uses axios for fetching data from the backend API
+- uses React Context for system messages
+- implemented simple client side validation for input forms
+
+
+## 2. Original task description
+
 ## Story
 
 One of your friends suggested that you should get to know Lara well, but you misunderstood and started to learn Laravel, a popular framework for the Web.
