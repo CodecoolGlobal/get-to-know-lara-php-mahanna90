@@ -21,27 +21,25 @@ const useStyles = makeStyles((theme) => ({
     },
     rowText: {
         color: "#00695f",
-        fontWeight: email => email.is_read ? 'bold' : 'normal',
     },
     subjectRow: {
         fontSize: '17px',
         margin: '0',
+        // fontWeight: props => (props.mail && props.mail.is_read) ? 'bold' : 'normal',
     },
     messageRow: {
         fontSize: '13px',
         margin: '0',
     },
-    read: {
-        // fontWeight: props => props.mail && props.mail.is_read ? 'bold' : 'normal',
+    unRead: {
         fontWeight: 'bold',
     }
 }));
 
-function CustomTableRow({mail, isInboxRow}) {
+function CustomTableRow({mail, isInboxRow, deleteMail}) {
     const classes = useStyles();
     const history = useHistory();
 
-    const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState(mail);
 
@@ -72,37 +70,6 @@ function CustomTableRow({mail, isInboxRow}) {
             });
     }
 
-    const deleteMail = (e) => {
-        setLoading(true);
-        // e.preventDefault();
-        axios.put(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/mails/delete/${mail.id.toString()}`, {
-            user: user,
-        },{
-            withCredentials: true,
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Accepted": "application/json",
-                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
-            },
-        })
-            .then((response) => {
-                console.log(response);
-                console.log("email was deleted");
-                setLoading(false);
-                if (isInboxRow) {
-                    history.push("/mails");
-                } else {
-                    history.push("/mails/sent");
-                }
-            })
-            .catch(error => {
-                console.log(error);
-                console.log("couldn't delete email");
-                alert("Cannot delete mail: " + error);
-            });
-    }
-
 
     return (
 
@@ -111,13 +78,13 @@ function CustomTableRow({mail, isInboxRow}) {
                 {email.is_read ? <IconButton onClick={toggleIsRead}><DraftsIcon fontSize={"default"} color={"primary"}/></IconButton>
                     : <IconButton onClick={toggleIsRead}><MailIcon fontSize={"default"} color={"primary"}/></IconButton>}
             </TableCell>
-            <TableCell align="left" className={classes.rowText} onClick={showEmailDetails}>{isInboxRow ? email.sender.name : email.target.name}</TableCell>
+            <TableCell align="left" className={`${classes.rowText} ${email.is_read ? '' : classes.unRead}`} onClick={showEmailDetails}>{isInboxRow ? email.sender.name : email.target.name}</TableCell>
             <TableCell align="left" className={classes.rowText} onClick={showEmailDetails}>
-                <p className={classes.subjectRow}>{email.subject}</p>
+                <p className={`${classes.subjectRow} ${email.is_read ? '' : classes.unRead}`}>{email.subject}</p>
                 <p className={classes.messageRow}>{email.message.slice(0, 100)}...</p></TableCell>
-            <TableCell align="right" className={classes.rowText} onClick={showEmailDetails}>{email.sent ? email.sent : ""}</TableCell>
+            <TableCell align="right" className={`${classes.rowText} ${email.is_read ? '' : classes.unRead}`} onClick={showEmailDetails}>{email.sent ? email.sent : ""}</TableCell>
             <TableCell align="center">
-                <IconButton onClick={deleteMail}><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
+                <IconButton onClick={() => deleteMail(email.id)}><DeleteIcon fontSize={"default"} color={"primary"}/></IconButton></TableCell>
         </TableRow>
 
     )
