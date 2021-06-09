@@ -70,6 +70,16 @@ class UserController extends Controller
             ];
             return response($response, Response::HTTP_NOT_ACCEPTABLE);
         }
+
+        $user = User::where('email', $request->get('email'))->first();
+        if ($user !== null) {
+            $response = [
+                'success' => false,
+                'message' => 'Email address already used.'
+            ];
+            return response($response, Response::HTTP_NOT_ACCEPTABLE);
+        }
+
         User::firstOrCreate([
             "name" => $request->get('name'),
             "email" => $request->get('email'),
