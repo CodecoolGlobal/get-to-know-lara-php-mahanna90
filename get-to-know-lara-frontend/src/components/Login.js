@@ -61,10 +61,6 @@ function Login() {
             setLoading(false);
             history.push("/mails");
         }
-        // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.LOGIN_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
-        //     setLoading(false);
-        //     history.push("/mails");
-        // }
     }, [message])
 
 
@@ -117,10 +113,15 @@ function Login() {
                             <AlertTitle>Error</AlertTitle>
                             <strong>{MESSAGES.LOGIN_ERROR_MSG}</strong>
                         </Alert>
-                        :
+                        : message === MESSAGES.REG_SUCCESS_MSG ?
                             <Alert severity="success" className={classes.alert}>
                                 <AlertTitle>Success</AlertTitle>
                                 <strong>{MESSAGES.REG_SUCCESS_MSG}</strong>
+                            </Alert>
+                            :
+                            <Alert severity="warning" className={classes.alert}>
+                                <AlertTitle>Warning</AlertTitle>
+                                <strong>{MESSAGES.LOGIN_WARNING_MSG}</strong>
                             </Alert>
                 }
                 <form className={classes.form} onSubmit={submit}>

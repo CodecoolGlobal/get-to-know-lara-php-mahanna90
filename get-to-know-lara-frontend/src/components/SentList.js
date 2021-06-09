@@ -169,7 +169,7 @@ function SentList() {
                         </TableHead>
                         <TableBody>
                             {mailsSent.map((mail) => (
-                                mail.deleted_by_sender ? "" :
+                                mail.deleted_by_sender ? null :
                                 <CustomTableRow key={mail.id} mail={mail} isInboxRow={false} deleteMail={deleteMail}/>
                             )) }
                         </TableBody>

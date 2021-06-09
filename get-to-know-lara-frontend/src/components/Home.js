@@ -273,7 +273,6 @@ function Home() {
                     <ProtectedRoute exact path="/mails" component={MailList}/>
                     <ProtectedRoute exact path="/mails/sent" component={SentList}/>
                     <ProtectedRoute exact path="/mails/compose" component={ComposeMail}/>
-                    {/*<ProtectedRoute exact path="/mails/view/{id}" component={ComposeMail}/>*/}
                     <ProtectedRoute exact path="/mails/view/:id" component={EmailDetails} />
                 </Switch>
             </main>

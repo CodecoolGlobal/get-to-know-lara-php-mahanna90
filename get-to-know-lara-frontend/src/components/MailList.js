@@ -170,7 +170,7 @@ function MailList() {
                         </TableHead>
                         <TableBody>
                             {mails.map((mail) => (
-                                mail.deleted_by_target ? "" :
+                                mail.deleted_by_target ? null :
                                 <CustomTableRow key={mail.id} mail={mail} isInboxRow={true} deleteMail={deleteMail}/>
                             ))}
                         </TableBody>

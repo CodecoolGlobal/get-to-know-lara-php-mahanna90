@@ -57,15 +57,8 @@ function Register() {
         if ( message === MESSAGES.REG_SUCCESS_MSG && !inputError) {
             setLoading(false);
             history.push("/login");
-        } else if (message === MESSAGES.REG_ERROR_MSG) {
-            console.log("Error occurred during registration");
-            history.push("/register");
         }
-        // if (message !== MESSAGES.DEFAULT_MSG && message !== MESSAGES.REG_ERROR_MSG && message !== MESSAGES.LOGIN_WARNING_MSG) {
-        //     setLoading(false);
-        //     history.push("/login");
-        // }
-    }, [message])
+    }, [message, inputError])
 
     const submit = (e) => {
         setLoading(true);
@@ -124,6 +117,7 @@ function Register() {
                                 id="name"
                                 label="Name"
                                 name="name"
+                                type="text"
                                 autoComplete="name"
                                 error={inputError === true}
                                 helperText={inputError === true ? 'Incorrect entry' : ' '}
@@ -140,6 +134,7 @@ function Register() {
                                 fullWidth
                                 id="email"
                                 label="Email Address"
+                                type="email"
                                 name="email"
                                 autoComplete="email"
                                 error={inputError === true}
