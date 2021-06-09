@@ -156,6 +156,21 @@ class MailController extends Controller
 
 
     /**
+     * Checks if user is the receiver of the current email.
+     *
+     * @param $user
+     * @param $mailId
+     * @return bool
+     */
+    public function checkIfUserIsReceiver($user, $mailId): bool
+    {
+        $mailToDelete = Mail::where('id', $mailId)->get()->first();
+
+        return $user->id === $mailToDelete->id_user_to;
+    }
+
+
+    /**
      * Mark the specified resource in storage as deleted.
      *
      * @param \Illuminate\Http\Request $request
@@ -166,10 +181,16 @@ class MailController extends Controller
     {
         $user = $request->user();
         $isSender = $this->checkIfUserIsSender($user, $mailId);
+        $isReceiver = $this->checkIfUserIsReceiver($user, $mailId);
+        $updated = null;
 
         if ($isSender) {
             $updated = Mail::where('id', $mailId)->update(['deleted_by_sender' => 1]);
-        } else {
+            // Additional check needed for the case when users send email to themselves
+            if ($isReceiver) {
+                $updated = Mail::where('id', $mailId)->update(['deleted_by_target' => 1]);
+            }
+        } elseif ($isReceiver){
             $updated = Mail::where('id', $mailId)->update(['deleted_by_target' => 1]);
         }
 

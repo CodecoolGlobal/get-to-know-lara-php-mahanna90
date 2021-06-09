@@ -93,6 +93,7 @@ function MailList() {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(JSON.parse(sessionStorage.getItem('user')));
 
+
     useEffect(() => {
         setLoading(true);
         if (sessionStorage.getItem('token')) {
@@ -122,6 +123,34 @@ function MailList() {
     }, []);
 
 
+    const deleteMail = (mailId) => {
+        setLoading(true);
+        // e.preventDefault();
+        axios.put(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/mails/delete/${mailId.toString()}`, {
+            user: user,
+        },{
+            withCredentials: true,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accepted": "application/json",
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            },
+        })
+            .then((response) => {
+                console.log(response);
+                console.log("email was deleted");
+                setLoading(false);
+                setMails((mails) => mails.filter((mail) => mail.id !== mailId))
+            })
+            .catch(error => {
+                console.log(error);
+                console.log("couldn't delete email");
+                alert("Cannot delete mail: " + error);
+            });
+    }
+
+
     return (
         <div className={classes.container}>
             <Paper elevation={3} className={classes.paper}>
@@ -142,7 +171,7 @@ function MailList() {
                         <TableBody>
                             {mails.map((mail) => (
                                 mail.deleted_by_target ? "" :
-                                <CustomTableRow key={mail.id} mail={mail} isInboxRow={true} />
+                                <CustomTableRow key={mail.id} mail={mail} isInboxRow={true} deleteMail={deleteMail}/>
                             ))}
                         </TableBody>
                     </Table>

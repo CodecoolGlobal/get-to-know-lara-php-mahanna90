@@ -122,6 +122,34 @@ function SentList() {
     }, []);
 
 
+    const deleteMail = (mailId) => {
+        setLoading(true);
+        // e.preventDefault();
+        axios.put(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/mails/delete/${mailId.toString()}`, {
+            user: user,
+        },{
+            withCredentials: true,
+            mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accepted": "application/json",
+                'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            },
+        })
+            .then((response) => {
+                console.log(response);
+                console.log("email was deleted");
+                setLoading(false);
+                setMailsSent((mails) => mails.filter((mail) => mail.id !== mailId))
+            })
+            .catch(error => {
+                console.log(error);
+                console.log("couldn't delete email");
+                alert("Cannot delete mail: " + error);
+            });
+    }
+
+
     return (
         <div className={classes.container}>
             <Paper elevation={3} className={classes.paper}>
@@ -142,7 +170,7 @@ function SentList() {
                         <TableBody>
                             {mailsSent.map((mail) => (
                                 mail.deleted_by_sender ? "" :
-                                <CustomTableRow key={mail.id} mail={mail} isInboxRow={false} />
+                                <CustomTableRow key={mail.id} mail={mail} isInboxRow={false} deleteMail={deleteMail}/>
                             )) }
                         </TableBody>
                     </Table>
