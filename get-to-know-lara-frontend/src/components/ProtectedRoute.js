@@ -12,6 +12,14 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     const [message, setMessage] = useContext(MessageContext);
 
     useEffect(() => {
+        if ( message === MESSAGES.LOGIN_ERROR_MSG) {
+            setLoading(false);
+            sessionStorage.clear();
+            history.push("/login");
+        }
+    }, [message])
+
+    useEffect(() => {
         setLoading(true);
         axios.get(`${BASE_URL}/get-to-know-lara-php-mahanna90/get-to-know-lara-backend/lara/public/api/validate-token`, {
             withCredentials: true,
@@ -32,8 +40,6 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
                 console.log("running and failing token validation axios fetch")
                 alert("Token validation error: " + error);
                 setMessage(MESSAGES.LOGIN_ERROR_MSG);
-                sessionStorage.clear();
-                history.push("/login");
             });
     }, []);
 
@@ -42,10 +48,8 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
             <Route
                 {...rest}
                 render={(props) => {
-                    // if (!tokenInfo.isAuthenticated) {
                     if (tokenInfo) {
                         if (sessionStorage.getItem('token') && tokenInfo.isAuthenticated) {
-                            // return <Redirect to={{ pathname: "/mails" }} />;
                             console.log("token authenticated");
                             return <Component {...props} />;
                         } else {
@@ -53,13 +57,6 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
                             return <Redirect to={{ pathname: "/login" }} />;
                         }
                     }
-
-                    // if (!roles.includes(tokenInfo.role.authority)) {
-                    //     if (tokenInfo.role.authority === "vendor") return <Redirect to={{ pathname: "/relocation" }} />;
-                    //     else return <Redirect to={{ pathname: "/mails" }} />;
-                    // }
-
-                    // return <Component {...props} />;
                 }}
             />
         );
@@ -67,5 +64,4 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
     else return "";
 };
 
-// <ProtectedRoute loggedIn={!loggedIn} path="/upload" component={UploadData} roles={["admin", "flotta"]} />
 export default ProtectedRoute;
